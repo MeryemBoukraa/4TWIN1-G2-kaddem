@@ -15,7 +15,7 @@ pipeline {
 
         stage('Compile Stage') {
             steps {
-                sh 'mvn clean compile'
+               sh 'cd Contrat && mvn clean compile'
             }
         }
 
