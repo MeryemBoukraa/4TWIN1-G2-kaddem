@@ -25,12 +25,12 @@ pipeline {
              }
         }
 
-       /* stage('MVN Nexus') {
+        stage('MVN Nexus') {
             steps {
                 sh 'mvn deploy -Dmaven.test.skip=true'
             }
         }
-
+/*
         stage('Building image') {
             steps {
                 sh 'docker build -t wafahidri/timesheet-devops:1.0.0 .'
