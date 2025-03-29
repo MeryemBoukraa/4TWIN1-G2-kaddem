@@ -9,13 +9,13 @@ pipeline {
     stages {
         stage('GIT') {
             steps {
-                git branch: 'main', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem/tree/YosrBenAmor-4Twin1-G2'
+               git branch: 'YosrBenAmor-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
             }
         }
 
         stage('Compile Stage') {
             steps {
-                sh 'mvn clean compile'
+               sh 'mvn clean compile'
             }
         }
 
