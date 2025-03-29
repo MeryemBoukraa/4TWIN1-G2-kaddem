@@ -23,8 +23,7 @@ pipeline {
              steps {
                  sh 'mvn sonar:sonar  -Dsonar.token=sqa_d8e839e59109540e88a52e6f9c11cc093c9c1985 -Dmaven.test.skip=true'
              }
-         }
-         }
+        }
 
        /* stage('MVN Nexus') {
             steps {
