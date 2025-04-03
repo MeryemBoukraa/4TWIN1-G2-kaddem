@@ -1,11 +1,12 @@
 package com.example.contrat.entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
-
+import java.util.List;
 
 
 @Entity
@@ -25,7 +26,11 @@ public class Contrat implements Serializable{
     private Specialite specialite;
     private Boolean archive;
     private Integer montantContrat;
+    private String nom;
 
 
+    @OneToMany(mappedBy = "contrat", fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<HistoriqueModification> historiques;
 
 }

@@ -1,0 +1,7 @@
+com\example\contrat\entities\Contrat.class
+com\example\contrat\entities\Specialite.class
+com\example\contrat\services\ContratServiceImpl.class
+com\example\contrat\repositories\ContratRepository.class
+com\example\contrat\services\IContratService.class
+com\example\contrat\controllers\ContratRestController.class
+com\example\contrat\ContratApplication.class

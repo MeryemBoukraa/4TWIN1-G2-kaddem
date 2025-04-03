@@ -16,5 +16,6 @@ public interface IContratService {
     public  void removeContrat(Integer idContrat);
 
 
+
 }
 

@@ -1,0 +1,12 @@
+2025-04-03 01:16:43.089791+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Erreur de syntaxe dans l'instruction SQL "[*]HISTORIQUE_MODIFICATION"; attendu "HELP"
+Syntax error in SQL statement "[*]HISTORIQUE_MODIFICATION"; expected "HELP"; SQL statement:
+HISTORIQUE_MODIFICATION [42001-232]
+2025-04-03 01:16:44.761014+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Erreur de syntaxe dans l'instruction SQL "[*]HISTORIQUE_MODIFICATION"; attendu "HELP"
+Syntax error in SQL statement "[*]HISTORIQUE_MODIFICATION"; expected "HELP"; SQL statement:
+HISTORIQUE_MODIFICATION [42001-232]
+2025-04-03 01:17:33.568575+01:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Erreur de syntaxe dans l'instruction SQL "[*]CONTRAT"; attendu "COMMIT, CREATE, CALL, CHECKPOINT, COMMENT"
+Syntax error in SQL statement "[*]CONTRAT"; expected "COMMIT, CREATE, CALL, CHECKPOINT, COMMENT"; SQL statement:
+CONTRAT [42001-232]
