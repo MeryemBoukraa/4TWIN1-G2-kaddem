@@ -21,7 +21,7 @@ pipeline {
 
        stage('MVN Sonarqube') {
              steps {
-                 sh 'mvn sonar:sonar  -Dsonar.token=squ_e3e135a5fb4f7724619e3ccfaa723cdce7e99 -Dmaven.test.skip=true'
+                 sh 'mvn sonar:sonar  -Dsonar.token=squ_e3e135a5fb4f7724619e3ccfaa723cd9cdce7e99 -Dmaven.test.skip=true'
              }
         }
 
