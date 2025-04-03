@@ -92,13 +92,6 @@
         </plugins>
     </build>
 
-    <!-- Add the distributionManagement section here -->
-    <distributionManagement>
-        <repository>
-            <id>your-repository-id</id>
-            <name>Your Repository Name</name>
-            <url>https://your-repository-url</url>
-        </repository>
-    </distributionManagement>
+    
 
 </project>
