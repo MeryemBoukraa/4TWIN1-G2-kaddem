@@ -91,10 +91,13 @@ pipeline {
             }
         }
 
-  /*      stage('Run Docker Compose') {
+        stage('Docker Compose Up') {
             steps {
-                sh 'docker-compose up -d'
+                script {
+                    // Démarrer tous les services via Docker Compose
+                    sh 'docker-compose up -d'
+                }
             }
-        }*/
+        }
     }
 }
