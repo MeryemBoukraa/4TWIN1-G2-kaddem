@@ -6,6 +6,12 @@ pipeline {
         maven 'M2_HOME'
     }
 
+environment {
+        DB_URL = 'jdbc:h2:file:./Database/Data/contrat;AUTO_SERVER=TRUE'
+        DB_USER = 'louay'
+        DB_PASSWORD = ''
+    }
+
     stages {
         stage('GIT') {
             steps {
@@ -16,6 +22,14 @@ pipeline {
         stage('Compile Stage') {
             steps {
                sh 'mvn clean compile'
+            }
+        }
+
+
+            stage('MVN Sonarqube') {
+            steps {
+                // Lancer l'analyse SonarQube (ne pas inclure les tests)
+                sh 'mvn sonar:sonar -Dsonar.token=squ_633753859ab21d16e8f3e3552e0edb8aa31bf9a9 -Dmaven.test.skip=true'
             }
         }
 
