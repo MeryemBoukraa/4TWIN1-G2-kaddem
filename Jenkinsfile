@@ -29,7 +29,7 @@ pipeline {
                 script {
                     // Démarre un conteneur MySQL pour les tests d'intégration
                     sh '''
-                    docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=microservice_ressource -p 3306:3306 -d mysql:5.7
+                    docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=microservice_ressource -p 3306:3306 -d mysql:8
                     '''
                     // Attendre que MySQL soit prêt avant de continuer
                     sh 'sleep 20'
