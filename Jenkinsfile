@@ -95,7 +95,7 @@ pipeline {
             steps {
                 script {
                     // Démarrer tous les services via Docker Compose
-                    sh 'docker-compose up -d'
+                    sh 'docker compose up -d'
                 }
             }
         }
