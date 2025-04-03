@@ -29,7 +29,7 @@ environment {
             stage('MVN Sonarqube') {
             steps {
                 // Lancer l'analyse SonarQube (ne pas inclure les tests)
-                sh 'mvn sonar:sonar -Dsonar.token=squ_633753859ab21d16e8f3e3552e0edb8aa31bf9a9 -Dmaven.test.skip=true'
+                sh 'mvn sonar:sonar -Dsonar.token=sqa_630d16e1d2841ea09db84166a80d5bc0c1b8ec3e -Dmaven.test.skip=true'
             }
         }
 
