@@ -78,7 +78,7 @@ pipeline {
 
         stage('Building image') {
             steps {
-                sh 'docker build -t yosrba/YosrBenAmor-G2-Kaddem:1.0.0 .'
+                sh 'docker build -t yosrba/yosrbenamor-g2-kaddem:1.0.0 .'
             }
         }
 
@@ -87,7 +87,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
-                sh 'docker push yosrba/YosrBenAmor-G2-Kaddem:1.0.0'
+                sh 'docker push yosrba/yosrbenamor-g2-kaddem:1.0.0'
             }
         }
 
