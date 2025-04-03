@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class RessourceServiceImpl implements IRessourceService {
     RessourceRepository ressourceRepository;
+    SummaryService summary;
     @Override
     public List<Ressource> retrieveAllRessources() {
         return ressourceRepository.findAll();
@@ -49,5 +51,12 @@ public class RessourceServiceImpl implements IRessourceService {
             stats.put(row[0].toString(), (Long) row[1]);
         }
         return stats;
+    }
+    @Override
+    public String generateSummaryForRessource(Long id) throws IOException {
+        Ressource ressource = ressourceRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Ressource introuvable"));
+
+        return summary.generateSummary(ressource);
     }
 }

@@ -5,6 +5,7 @@ import com.example.ressource.service.IRessourceService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -48,5 +49,8 @@ public class RessourceRestController {
         return ressourceService.getNombreRessourcesParType();
     }
 
-
+    @GetMapping("/{id}/summary")
+    public String getPdfSummary(@PathVariable Long id) throws IOException {
+        return ressourceService.generateSummaryForRessource(id);
+    }
 }
