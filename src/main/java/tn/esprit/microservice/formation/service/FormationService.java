@@ -16,7 +16,7 @@ public class FormationService implements IFormationService {
     {
         return formationRepo.save(formation);
     }
-    public Formation getFormation(int id)
+    public Formation getFormation(Long id)
     {
         return formationRepo.getReferenceById(id);
     }
@@ -29,7 +29,7 @@ public class FormationService implements IFormationService {
     {
         return formationRepo.save(formation);
     }
-    public void deleteFormation(int id)
+    public void deleteFormation(Long id)
     {
         formationRepo.deleteById(id);
     }

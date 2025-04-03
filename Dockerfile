@@ -1,4 +1,4 @@
 FROM openjdk:17
 EXPOSE 8089
-ADD target/boycott-1.0.0.jar Formation.jar
+ADD target/formation-0.0.1-SNAPSHOT.jar Formation.jar
 ENTRYPOINT ["java","-jar","Formation.jar"]

@@ -2,10 +2,7 @@ package tn.esprit.microservice.formation.entitiy;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
@@ -15,7 +12,6 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-
 public class Formation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +24,8 @@ public class Formation {
     private String description;
 
     @Column(name = "date_formation")
-
-    private String dateFormation;
+    @JsonFormat(pattern = "yyyy-MM-dd") // To ensure proper date format mapping
+    private Date dateFormation;
 
     @Column(name = "nombre_place")
     private int nombrePlace;
