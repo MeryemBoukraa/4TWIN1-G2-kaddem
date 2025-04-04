@@ -24,6 +24,17 @@ pipeline {
             }
         }
 
+        stage('Préparer Eureka') {
+            steps {
+                sh '''
+                    # Vérifie si Eureka n'existe pas déjà
+                    if [ ! -d "Eureka" ]; then
+                        ln -s C:/Users/Yosr/OneDrive - ESPRIT/Bureau/Kaddem-DevOps ./Eureka
+                    fi
+                '''
+            }
+        }
+
         stage('Start MySQL Container') {
             steps {
                 script {
@@ -90,23 +101,9 @@ pipeline {
                 sh 'docker push yosrba/yosrbenamor-g2-kaddem:1.0.0'
             }
         }
-         stage('Préparer Eureka') {
-            steps {
-                sh '''
-                    # Vérifie si Eureka n'existe pas déjà
-                    if [ ! -d "Eureka" ]; then
-                        ln -s /chemin/vers/Eureka ./Eureka
-                    fi
-                '''
-            }
-        }
+         
 
-        stage('Build') {
-            steps {
-                // ta commande de build, par ex. :
-                sh './mvnw clean install'
-            }
-        }
+        
         stage('Docker Compose Up') {
             steps {
                 script {
