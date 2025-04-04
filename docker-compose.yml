@@ -1,7 +1,4 @@
-version: '3.9'
-
 services:
-
   mysql:
     image: mysql:5.7
     container_name: mysql
@@ -10,8 +7,12 @@ services:
       MYSQL_DATABASE: microservice_ressource
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
-  eureka:
+  eureka-server:
     build: /Desktop/Eureka
     container_name: eureka-server
     ports:
