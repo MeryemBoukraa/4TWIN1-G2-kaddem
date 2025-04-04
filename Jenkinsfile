@@ -27,10 +27,15 @@ pipeline {
         stage('Préparer Eureka') {
             steps {
                sh '''
-                            if [ ! -d "Eureka" ]; then
-                                ln -s /path/to/Kaddem-DevOps/Eureka Eureka
-                            fi
-                        '''
+            # Vérifier si le répertoire Eureka existe déjà
+            if [ -d "Eureka" ]; then
+                echo "Le répertoire Eureka existe déjà, suppression du lien symbolique."
+                rm -rf Eureka  # Supprimer le répertoire existant
+            fi
+
+            # Créer le lien symbolique
+            ln -s /path/to/Kaddem-DevOps/Eureka Eureka
+        '''
             }
         }
 
