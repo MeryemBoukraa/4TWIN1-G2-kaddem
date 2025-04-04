@@ -24,20 +24,7 @@ pipeline {
             }
         }
 
-        stage('Préparer Eureka') {
-            steps {
-              sh '''
-            # Vérifier si le répertoire Eureka existe déjà
-            if [ -d "Eureka" ]; then
-                echo "Le répertoire Eureka existe déjà, suppression du lien symbolique."
-                rm -rf Eureka  # Supprimer le répertoire existant
-            fi
-
-            # Créer le lien symbolique vers le bon chemin de Eureka
-            ln -s /home/jenkins/Desktop/Kaddem-DevOps/Eureka Eureka
-        '''
-            }
-        }
+       
 
         stage('Start MySQL Container') {
             steps {
@@ -111,7 +98,6 @@ pipeline {
         stage('Docker Compose Up') {
             steps {
                 script {
-                    // Démarrer tous les services via Docker Compose
                     sh 'docker compose up -d'
                 }
             }
