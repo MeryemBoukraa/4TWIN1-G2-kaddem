@@ -26,11 +26,11 @@ pipeline {
 
         stage('Préparer Eureka') {
             steps {
-                bat '''
-                            if not exist "Eureka" (
-                                mklink /D "Eureka" "C:\\Users\\Yosr\\OneDrive - ESPRIT\\Bureau\\Kaddem-DevOps\\Eureka"
-                            )
-                    '''
+               sh '''
+                            if [ ! -d "Eureka" ]; then
+                                ln -s /path/to/Kaddem-DevOps/Eureka Eureka
+                            fi
+                        '''
             }
         }
 
