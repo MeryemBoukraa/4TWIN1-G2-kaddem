@@ -12,8 +12,7 @@ services:
       - "3306:3306"
 
   eureka:
-    build:
-      context: C:/Users/Yosr/OneDrive - ESPRIT/Bureau/Kaddem-DevOps
+    build: /Desktop/Eureka
     container_name: eureka-server
     ports:
       - "8761:8761"
