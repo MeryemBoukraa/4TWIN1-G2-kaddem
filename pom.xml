@@ -77,7 +77,7 @@
          <!-- Deploy to Nexus -->
  	<distributionManagement>
  		<repository>
- 			<id>nexus-credentials</id>
+ 			<id>deploymenttRepo</id>
  			<name>Nexus Repository</name>
  			<url>http://localhost:8081/repository/maven-releases/</url>
  		</repository>
