@@ -26,15 +26,15 @@ pipeline {
 
         stage('Préparer Eureka') {
             steps {
-               sh '''
+              sh '''
             # Vérifier si le répertoire Eureka existe déjà
             if [ -d "Eureka" ]; then
                 echo "Le répertoire Eureka existe déjà, suppression du lien symbolique."
                 rm -rf Eureka  # Supprimer le répertoire existant
             fi
 
-            # Créer le lien symbolique
-            ln -s /path/to/Kaddem-DevOps/Eureka Eureka
+            # Créer le lien symbolique vers le bon chemin de Eureka
+            ln -s /home/jenkins/Desktop/Kaddem-DevOps/Eureka Eureka
         '''
             }
         }
