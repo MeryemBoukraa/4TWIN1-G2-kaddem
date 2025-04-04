@@ -90,7 +90,23 @@ pipeline {
                 sh 'docker push yosrba/yosrbenamor-g2-kaddem:1.0.0'
             }
         }
+         stage('Préparer Eureka') {
+            steps {
+                sh '''
+                    # Vérifie si Eureka n'existe pas déjà
+                    if [ ! -d "Eureka" ]; then
+                        ln -s /chemin/vers/Eureka ./Eureka
+                    fi
+                '''
+            }
+        }
 
+        stage('Build') {
+            steps {
+                // ta commande de build, par ex. :
+                sh './mvnw clean install'
+            }
+        }
         stage('Docker Compose Up') {
             steps {
                 script {
@@ -98,6 +114,11 @@ pipeline {
                     sh 'docker compose up -d'
                 }
             }
+        }
+    }
+     post {
+        always {
+            sh 'docker-compose down'
         }
     }
 }
