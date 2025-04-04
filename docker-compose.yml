@@ -11,14 +11,14 @@ services:
     ports:
       - "3306:3306"
 
-  eureka-server:
-    build: ./Eureka
-    image: yosrba/eureka:1.0
-    container_name: eureka
+  eureka:
+    build:
+      context: C:/Users/Yosr/OneDrive - ESPRIT/Bureau/Kaddem-DevOps
+    container_name: eureka-server
     ports:
       - "8761:8761"
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka/"
+    networks:
+      - mynetwork
 
   ressource:
     build: ./devops_back
@@ -48,3 +48,7 @@ services:
       - ressource
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka/"
+
+networks:
+  mynetwork:
+    driver: bridge
