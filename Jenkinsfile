@@ -28,13 +28,19 @@ pipeline {
         }
 
     
-        stage('MVN Nexus') {
+    stage('MVN Nexus') {
     steps {
-        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'admin', passwordVariable: 'admin')]) {
-            sh "mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus-repository::default::http://localhost:8081/repository/maven-releases/ -Dusername=${admin} -Dpassword=${admin}"
+        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USERNAME', passwordVariable: 'NEXUS_PASSWORD')]) {
+            sh """
+                mvn deploy -Dmaven.test.skip=true \
+                -DaltDeploymentRepository=nexus-repository::default::http://localhost:8081/repository/maven-releases/ \
+                -Dusername=${NEXUS_USERNAME} \
+                -Dpassword=${NEXUS_PASSWORD}
+            """
         }
     }
 }
+
 
         
 
