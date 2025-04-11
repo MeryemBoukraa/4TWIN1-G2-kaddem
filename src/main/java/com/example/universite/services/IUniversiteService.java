@@ -19,6 +19,7 @@ public interface IUniversiteService {
 
     public  void deleteUniversite(Integer idUniversite);
 
+    List<Universite> findUniversitiesWithinRadius(double latitude, double longitude, double radiusKm);
 
 
 
