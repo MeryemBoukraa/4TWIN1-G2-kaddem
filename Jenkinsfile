@@ -30,6 +30,14 @@ pipeline {
                 sh 'mvn deploy -Dmaven.test.skip=true'
             }
         }
+
+
+        stage("MOCKITO") {
+            steps {
+                sh "mvn test -Dtest=tn.esprit.tpfoyer.TpFoyerApplicationTests"
+            }
+        }
+        
 /*
         stage('Building image') {
             steps {
