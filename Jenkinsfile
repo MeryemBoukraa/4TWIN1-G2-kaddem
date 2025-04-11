@@ -19,17 +19,24 @@ pipeline {
             }
         }
 
+        
+
        stage('MVN Sonarqube') {
              steps {
                  sh 'mvn sonar:sonar  -Dsonar.token=squ_bbe8b39c70c162231659881639677022f6a332aa -Dmaven.test.skip=true'
              }
         }
 
+    
         stage('MVN Nexus') {
-            steps {
-                sh 'mvn deploy -Dmaven.test.skip=true'
-            }
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'admin', passwordVariable: 'admin')]) {
+            sh "mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus-repository::default::http://localhost:8081/repository/maven-releases/ -Dusername=${admin} -Dpassword=${admin}"
         }
+    }
+}
+
+        
 
 
         stage("MOCKITO") {
