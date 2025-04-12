@@ -26,6 +26,10 @@ public class HistoriqueModificationService implements IHistoriqueService {
         historique.setDateModification(new Date());
 
         historiqueModificationRepository.save(historique);  // Sauvegarder l'historique
+        System.out.println("Ajout historique: " + action + " - " + details);
+
     }
+
+
 
 }

@@ -6,6 +6,7 @@ import com.example.contrat.services.HistoriqueModificationService;
 import com.example.contrat.services.IContratService;
 import lombok.AllArgsConstructor;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,7 +57,7 @@ public class ContratRestController {
 	}
 
 	// http://localhost:8089/Kaddem/contrat/remove-contrat/1
-	@DeleteMapping("/remove-contrat/{contrat-id}")
+	@DeleteMapping("/{contrat-id}")
 	public void removeContrat(@PathVariable("contrat-id") Integer contratId) {
 		contratService.removeContrat(contratId);
 	}
@@ -66,46 +67,72 @@ public class ContratRestController {
 
 	@PutMapping("/update-contrat")
 	public Contrat updateContrat(@RequestBody Contrat c) {
-		Contrat contrat = contratService.retrieveContrat(c.getIdContrat()); // Récupérer l'ancien contrat
+		Contrat oldContrat = contratService.retrieveContrat(c.getIdContrat());
 
-		// Vérification des modifications sur les attributs
-		if (contrat.getSpecialite() != c.getSpecialite()) {
+		if (oldContrat == null) {
+			throw new RuntimeException("Contrat non trouvé");
+		}
+
+		if (!oldContrat.getSpecialite().equals(c.getSpecialite())) {
 			historiqueModificationService.ajouterHistorique(
-					contrat,
+					oldContrat,
 					"Modification de spécialité",
-					"Spécialité modifiée de " + contrat.getSpecialite() + " à " + c.getSpecialite()
+					"Spécialité modifiée de " + oldContrat.getSpecialite() + " à " + c.getSpecialite()
 			);
+			oldContrat.setSpecialite(c.getSpecialite());
 		}
 
-		if (contrat.getMontantContrat() != c.getMontantContrat()) {
+		if (oldContrat.getMontantContrat() != null && !oldContrat.getMontantContrat().equals(c.getMontantContrat())) {
 			historiqueModificationService.ajouterHistorique(
-					contrat,
+					oldContrat,
 					"Modification du montant",
-					"Montant modifié de " + contrat.getMontantContrat() + " à " + c.getMontantContrat()
+					"Montant modifié de " + oldContrat.getMontantContrat() + " à " + c.getMontantContrat()
 			);
+			oldContrat.setMontantContrat(c.getMontantContrat());
 		}
 
-		if (contrat.getArchive() != c.getArchive()) {
+		if (!oldContrat.getArchive().equals(c.getArchive())) {
 			historiqueModificationService.ajouterHistorique(
-					contrat,
+					oldContrat,
 					"Modification d'archive",
-					"Archive modifiée de " + contrat.getArchive() + " à " + c.getArchive()
+					"Archive modifiée de " + oldContrat.getArchive() + " à " + c.getArchive()
 			);
+			oldContrat.setArchive(c.getArchive());
 		}
 
-		if (!contrat.getNom().equals(c.getNom())) {
+		if (!oldContrat.getNom().equals(c.getNom())) {
 			historiqueModificationService.ajouterHistorique(
-					contrat,
+					oldContrat,
 					"Modification du nom",
-					"Nom modifié de " + contrat.getNom() + " à " + c.getNom()
+					"Nom modifié de " + oldContrat.getNom() + " à " + c.getNom()
 			);
+			oldContrat.setNom(c.getNom());
 		}
 
-		// Mise à jour du contrat
-		contrat = contratService.updateContrat(c);
+		// Il faut mettre à jour aussi les dates si elles changent
+		if (c.getDateDebutContrat() != null && !DateUtils.isSameDay(c.getDateDebutContrat(), oldContrat.getDateDebutContrat())) {
+			historiqueModificationService.ajouterHistorique(
+					oldContrat,
+					"Modification de la date de début",
+					"Date de début modifiée de " + oldContrat.getDateDebutContrat() + " à " + c.getDateDebutContrat()
+			);
+			oldContrat.setDateDebutContrat(c.getDateDebutContrat());
+		}
 
-		return contrat;
+		if (c.getDateFinContrat() != null && !DateUtils.isSameDay(c.getDateFinContrat(), oldContrat.getDateFinContrat())) {
+			historiqueModificationService.ajouterHistorique(
+					oldContrat,
+					"Modification de la date de fin",
+					"Date de fin modifiée de " + oldContrat.getDateFinContrat() + " à " + c.getDateFinContrat()
+			);
+			oldContrat.setDateFinContrat(c.getDateFinContrat());
+		}
+
+
+		return contratService.updateContrat(oldContrat);
 	}
+
+
 	@GetMapping("/retrieve-historique/{contrat-id}")
 	public ResponseEntity<List<HistoriqueModification>> getHistoriqueByContrat(@PathVariable("contrat-id") Integer contratId) {
 		List<HistoriqueModification> historiques = historiqueModificationService.getHistoriqueByContrat(contratId);

@@ -29,7 +29,7 @@ public class Contrat implements Serializable{
     private String nom;
 
 
-    @OneToMany(mappedBy = "contrat", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "contrat", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<HistoriqueModification> historiques;
 
