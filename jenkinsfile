@@ -33,39 +33,14 @@ environment {
             }
         }
 
-        stage('MVN Nexus') {
+         stage('MVN Nexus') {
             steps {
-                sh 'mvn deploy -Dmaven.test.skip=true'
+               sh 'mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus::default::http://192.168.188.133:8081//repository/maven-snapshots/'
             }
         }
 
         
 
-       /* stage('MVN Nexus') {
-            steps {
-                sh 'mvn deploy -Dmaven.test.skip=true'
-            }
-        }
-
-        stage('Building image') {
-            steps {
-                sh 'docker build -t wafahidri/timesheet-devops:1.0.0 .'
-            }
-        }
-
-        stage('Deploy Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                }
-                sh 'docker push wafahidri/timesheet-devops:1.0.0'
-            }
-        }
-
-        stage('Run Docker Compose') {
-            steps {
-                sh 'docker-compose up -d'
-            }
-        }*/
+      
     }
 }
