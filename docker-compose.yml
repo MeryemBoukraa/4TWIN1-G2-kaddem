@@ -12,13 +12,7 @@ services:
       timeout: 20s
       retries: 10
 
-  eureka-server:
-    build: /Desktop/Eureka
-    container_name: eureka-server
-    ports:
-      - "8761:8761"
-    networks:
-      - mynetwork
+
 
   ressource:
     build: ./devops_back
@@ -37,18 +31,5 @@ services:
       spring.datasource.username: "root"
       spring.datasource.password: "root"
 
-  api-gateway:
-    build: ./ApiGetWay
-    image: yosrba/apigetway:1.0
-    container_name: apigetway
-    ports:
-      - "8090:8090"
-    depends_on:
-      - eureka-server
-      - ressource
-    environment:
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://eureka-server:8761/eureka/"
+ 
 
-networks:
-  mynetwork:
-    driver: bridge
