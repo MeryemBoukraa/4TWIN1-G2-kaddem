@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>formation</artifactId> <!-- Application name is now formation -->
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>formation</name>
     <description>Formation</description>
 
