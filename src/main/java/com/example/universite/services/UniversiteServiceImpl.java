@@ -38,6 +38,10 @@ return  (universiteRepository.save(u));
     public  void deleteUniversite(Integer idUniversite){
         universiteRepository.delete(retrieveUniversite(idUniversite));
     }
+    public Universite findUniversiteById(int idUniversite) {
+        Universite u = universiteRepository.findById(idUniversite).get();
+        return u;
+    }
 
     @Override
     public List<Universite> findUniversitiesWithinRadius(double latitude, double longitude, double radiusKm) {
