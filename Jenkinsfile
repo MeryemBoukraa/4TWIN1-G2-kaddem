@@ -46,7 +46,7 @@ pipeline {
 
         stage('Building image') {
             steps {
-                sh 'docker build -t wafahidri/timesheet-devops:1.0.0 .'
+                sh 'docker build -t meryemboukraa/meryemboukraa-g2-kaddem:1.0.0 .'
             }
         }
 
@@ -55,7 +55,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
-                sh 'docker push wafahidri/timesheet-devops:1.0.0'
+                sh 'docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0.0'
             }
         }
 
