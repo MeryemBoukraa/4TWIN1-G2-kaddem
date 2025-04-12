@@ -43,7 +43,7 @@ pipeline {
             }
         }
         
-/*
+
         stage('Building image') {
             steps {
                 sh 'docker build -t wafahidri/timesheet-devops:1.0.0 .'
@@ -63,6 +63,6 @@ pipeline {
             steps {
                 sh 'docker-compose up -d'
             }
-        }*/
+        }
     }
 }
