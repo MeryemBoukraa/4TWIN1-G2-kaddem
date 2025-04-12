@@ -35,7 +35,7 @@ environment {
 
          stage('MVN Nexus') {
             steps {
-                sh 'mvn deploy -Dmaven.test.skip=true'
+               sh 'mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus::default::http://192.168.188.133:8081//repository/maven-snapshots/'
             }
         }
 
