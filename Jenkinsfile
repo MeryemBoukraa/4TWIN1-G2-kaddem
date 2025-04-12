@@ -63,7 +63,7 @@ stage('SonarQube Analysis') {
                 sh '''
                 mvn sonar:sonar \
                 -Dsonar.token=$TOKEN \
-                -Dsonar.projectKey=timesheet-devops \
+                -Dsonar.projectKey=formation \
                 -Dsonar.sources=src/main/java \
                 -Dsonar.tests=src/test/java \
                 -Dsonar.java.binaries=target/classes
