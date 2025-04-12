@@ -19,29 +19,43 @@ pipeline {
             }
         }
 
+        
+
        stage('MVN Sonarqube') {
              steps {
                  sh 'mvn sonar:sonar  -Dsonar.token=squ_bbe8b39c70c162231659881639677022f6a332aa -Dmaven.test.skip=true'
              }
         }
 
-        stage('MVN Nexus') {
+    
+   stage('MVN Nexus') {
             steps {
                 sh 'mvn deploy -Dmaven.test.skip=true'
             }
         }
 
+        stage('Run Unit Tests') {
+            steps {
+                sh 'mvn test -Dtest=UniversiteServiceImplTest'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                sh 'mvn test'
+            }
+        } 
+
 
         stage("MOCKITO") {
             steps {
-                sh "mvn test -Dtest=tn.esprit.tpfoyer.TpFoyerApplicationTests"
+                sh "mvn test -Dtest=mvn test -Dtest=com.example.universite.UniversiteApplicationTests"
             }
         }
         
-/*
+
         stage('Building image') {
             steps {
-                sh 'docker build -t wafahidri/timesheet-devops:1.0.0 .'
+                sh 'docker build -t meryemboukraa/meryemboukraa-g2-kaddem:1.0.0 .'
             }
         }
 
@@ -50,7 +64,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
-                sh 'docker push wafahidri/timesheet-devops:1.0.0'
+                sh 'docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0.0'
             }
         }
 
@@ -58,6 +72,6 @@ pipeline {
             steps {
                 sh 'docker-compose up -d'
             }
-        }*/
+        }
     }
 }
