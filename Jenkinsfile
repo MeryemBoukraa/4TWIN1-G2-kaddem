@@ -26,11 +26,22 @@ pipeline {
             }
         }
 
-        stage('Building Image') {
-            steps {
-                sh 'docker build -t oussamaawledsalem/formation:2.0.0 .'
-            }
+       stage('Building Image') {
+    steps {
+        script {
+            // 🧹 Remove old image if it exists
+            sh '''
+                if docker images | grep -q "oussamaawledsalem/formation"; then
+                    docker rmi oussamaawledsalem/formation:2.0.0 || true
+                fi
+            '''
+
+            // 🛠️ Build the new image
+            sh 'docker build -t oussamaawledsalem/formation:2.0.0 .'
         }
+    }
+}
+
 
         stage('Docker Login & Push') {
             steps {
