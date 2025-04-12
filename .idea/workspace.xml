@@ -5,9 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="83c0c06a-b2ff-44b3-bed9-25022fdbbc32" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Database/Data/contrat.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/Database/Data/contrat.mv.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/contrat/controllers/ContratRestController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/contrat/controllers/ContratRestController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Database/Data/contrat.lock.db" beforeDir="false" afterPath="$PROJECT_DIR$/Database/Data/contrat.lock.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/contrat/ContratApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/contrat/ContratApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/contrat/controllers/ContratRestController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/contrat/controllers/ContratRestController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/contrat/entities/Contrat.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/contrat/entities/Contrat.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/contrat/entities/Specialite.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/contrat/entities/Specialite.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/contrat/repositories/ContratRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/contrat/repositories/ContratRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/contrat/services/ContratServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/contrat/services/ContratServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/example/contrat/services/IContratService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/example/contrat/services/IContratService.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,8 +59,8 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "contrat.1.1",
-    "last_opened_file_path": "C:/Users/louay/Desktop/miniprojet_micro/Contrat",
+    "git-widget-placeholder": "Louayabidi-4Twin1-G2",
+    "last_opened_file_path": "C:/Users/louay/Desktop/devop/4TWIN1-G2-kaddem",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -94,6 +102,7 @@
       <workItem from="1740961299265" duration="1268000" />
       <workItem from="1740989918151" duration="2273000" />
       <workItem from="1742944586517" duration="5729000" />
+      <workItem from="1744488730988" duration="2884000" />
     </task>
     <servers />
   </component>
