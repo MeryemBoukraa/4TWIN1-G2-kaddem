@@ -28,7 +28,7 @@ pipeline {
 
         stage('Building Image') {
             steps {
-                sh 'docker build -t oussamaawledsalem/timesheet-devops:1.0.0 .'
+                sh 'docker build -t oussamaawledsalem/formation:2.0.0 .'
             }
         }
 
@@ -36,7 +36,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                    sh 'docker push oussamaawledsalem/timesheet-devops:1.0.0'
+                    sh 'docker push oussamaawledsalem/formation:2.0.0'
                 }
             }
         }
@@ -52,7 +52,7 @@ pipeline {
                 fi
             '''
         }
-                sh 'docker run -d --name springDevops -p 8085:8085 oussamaawledsalem/timesheet-devops:1.0.0'
+                sh 'docker run -d --name springDevops -p 8089:8089 oussamaawledsalem/formation:2.0.0'
             }
         }
 
