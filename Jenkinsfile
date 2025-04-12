@@ -10,7 +10,7 @@ pipeline {
 
         stage('GIT') {
             steps {
-                git branch: 'main', url: 'https://github.com/oussamaawledsalem/springDevops.git'
+                git branch: 'Oussamaawledsalem-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
             }
         }
 
