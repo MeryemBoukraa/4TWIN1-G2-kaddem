@@ -5,7 +5,13 @@ pipeline {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
+  stages {
 
+        stage('Test Docker Access') {
+            steps {
+                sh 'docker ps'
+            }
+        }
     stages {
         stage('GIT') {
             steps {
