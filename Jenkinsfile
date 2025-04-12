@@ -34,7 +34,16 @@ pipeline {
             }
         }
 
-        
+        stage('Run Unit Tests') {
+            steps {
+                sh 'mvn test -Dtest=RessourceServiceImplTest'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                sh 'mvn test'
+            }
+        } 
 
 
         stage("MOCKITO") {
