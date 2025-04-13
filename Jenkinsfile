@@ -63,27 +63,20 @@ pipeline {
              }
          }
  
-         stages {
+     
          stage('Deploy Image') {
              steps {
-                 withCredentials([usernamePassword(
-                     credentialsId: 'docker-hub-credentials',
-                     usernameVariable: 'DOCKER_USERNAME',
-                     passwordVariable: 'DOCKER_PASSWORD'
-                 )]) {
-                     sh """
-                         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-                         docker push $DOCKER_IMAGE
-                     """
+                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                  }
+                 sh 'docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0.0'
              }
          }
  
          stage('Run Docker Compose') {
              steps {
-                sh 'docker compose up -d --build'
+                 sh 'docker-compose up -d'
+          
              }
          }
      }
- }
- }
