@@ -28,7 +28,7 @@ pipeline {
 
         stage('Maven Clean Install') {
             steps {
-                sh 'mvn clean install -DskipTests'
+                sh 'mvn clean install '
                  dir('Eureka') {
                                 sh 'mvn install -DskipTests'
                                 }
@@ -83,6 +83,7 @@ stage('SonarQube Analysis') {
                 -Dsonar.sources=src/main/java \
                 -Dsonar.tests=src/test/java \
                 -Dsonar.java.binaries=target/classes
+                 -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                 '''
             }
         }
@@ -94,7 +95,7 @@ stage('SonarQube Analysis') {
 
         stage('MVN Nexus') {
             steps {
-                sh 'mvn deploy -Dmaven.test.skip=true'
+                sh 'mvn deploy '
             }
         }
     }
