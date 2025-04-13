@@ -6,9 +6,9 @@ services:
     container_name: eureka
     ports:
       - "8761:8761"
-    
     environment:
       - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka/
+
   apigateway:
     build: ./ApiGateWay
     image: chiheb634/apigateway:1.0
@@ -29,34 +29,7 @@ services:
     ports:
       - "8089:8089"
     depends_on:
-      mysql8:
-        condition: service_healthy
       eureka-server:
         condition: service_started
-
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql8:3306/departementService?createDatabaseIfNotExist=true
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka:8761/eureka/
-      - spring.datasource.username=root
-      - spring.datasource.password=root
-    
-  mysql8:
-    image: mysql:8
-    platform: linux/amd64
-    container_name: mysql8
-    restart: unless-stopped
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_DATABASE=departementService
-    ports:
-      - "3306:3306"
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      interval: 10s
-      retries: 5
-      start_period: 30s
-    volumes:
-      - db_mysql:/var/lib/mysql
-volumes:
-  db_mysql:
-    
