@@ -42,30 +42,40 @@ pipeline {
 
         stage('Run Unit Tests') {
             steps {
+                dir('Ressource') {
                 sh 'mvn test -Dtest=RessourceServiceImplTest'
+                }
             }
         }
         stage('Run Tests') {
             steps {
+                dir('Ressource') {
                 sh 'mvn test'
+                }
             }
         }
 
         stage('MVN Sonarqube') {
              steps {
+                 dir('Ressource') {
                  sh 'mvn sonar:sonar  -Dsonar.token=sqa_f7d516031e481dcda3292b278c1a8d39c1011b36 -Dmaven.test.skip=true'
+                 }
              }
         }
 
         stage('Install') {
             steps {
+                dir('Ressource') {
                 sh 'mvn install'
+                }
             }
         }
 
         stage('MVN Nexus') {
             steps {
+                dir('Ressource') {
                 sh 'mvn deploy -Dmaven.test.skip=true'
+                }
             }
         }
 
@@ -81,7 +91,7 @@ pipeline {
 
         stage('Building image') {
             steps {
-                sh 'docker build -t yosrba/yosrbenamor-g2-kaddem:1.0.0 .'
+                sh 'docker build -t yosrba/yosrbenamor-g2-kaddem:1.0 .'
             }
         }
 
@@ -90,7 +100,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
-                sh 'docker push yosrba/yosrbenamor-g2-kaddem:1.0.0'
+                sh 'docker push yosrba/yosrbenamor-g2-kaddem:1.0'
             }
         }
          
