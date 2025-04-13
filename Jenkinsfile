@@ -12,21 +12,21 @@ pipeline {
             parallel {
                 stage('Build Eureka') {
                     steps {
-                        dir('eureka-server') {
+                        dir('Back-eurika') {
                             sh 'mvn clean compile package'
                         }
                     }
                 }
                 stage('Build API Gateway') {
                     steps {
-                        dir('api-gateway') {
+                        dir('ApiGateWay') {
                             sh 'mvn clean compile package'
                         }
                     }
                 }
                 stage('Build Department Service') {
                     steps {
-                        dir('department-service') {
+                        dir('departement') {
                             sh 'mvn clean compile package'
                         }
                     }
@@ -38,7 +38,7 @@ pipeline {
             parallel {
                 stage('Eureka Sonar') {
                     steps {
-                        dir('eureka-server') {
+                        dir('Back-eurika') {
                             withCredentials([string(credentialsId: 'jenkins-sonar', variable: 'SONARQUBE_TOKEN')]) {
                                 sh "mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_SERVER"
                             }
@@ -47,7 +47,7 @@ pipeline {
                 }
                 stage('Gateway Sonar') {
                     steps {
-                        dir('api-gateway') {
+                        dir('ApiGateWay') {
                             withCredentials([string(credentialsId: 'jenkins-sonar', variable: 'SONARQUBE_TOKEN')]) {
                                 sh "mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_SERVER"
                             }
@@ -56,7 +56,7 @@ pipeline {
                 }
                 stage('Department Sonar') {
                     steps {
-                        dir('department-service') {
+                        dir('departement') {
                             withCredentials([string(credentialsId: 'jenkins-sonar', variable: 'SONARQUBE_TOKEN')]) {
                                 sh "mvn sonar:sonar -Dsonar.login=$SONARQUBE_TOKEN -Dsonar.host.url=$SONARQUBE_SERVER"
                             }
@@ -70,21 +70,21 @@ pipeline {
             parallel {
                 stage('Deploy Eureka') {
                     steps {
-                        dir('eureka-server') {
+                        dir('Back-eurika') {
                             sh 'mvn deploy -Dmaven.test.skip=true'
                         }
                     }
                 }
                 stage('Deploy Gateway') {
                     steps {
-                        dir('api-gateway') {
+                        dir('ApiGateWay') {
                             sh 'mvn deploy -Dmaven.test.skip=true'
                         }
                     }
                 }
                 stage('Deploy Department') {
                     steps {
-                        dir('department-service') {
+                        dir('departement') {
                             sh 'mvn deploy -Dmaven.test.skip=true'
                         }
                     }
