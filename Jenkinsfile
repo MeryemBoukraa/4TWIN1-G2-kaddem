@@ -26,18 +26,18 @@ pipeline {
 
        
 
-        // stage('Start MySQL Container') {
-        //     steps {
-        //         script {
-        //             // Démarre un conteneur MySQL pour les tests d'intégration
-        //             sh '''
-        //             docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=microservice_ressource -p 3306:3306 -d mysql:5.7
-        //             '''
-        //             // Attendre que MySQL soit prêt avant de continuer
-        //             sh 'sleep 20'
-        //         }
-        //     }
-        // }
+        stage('Start MySQL Container') {
+            steps {
+                script {
+                    // Démarre un conteneur MySQL pour les tests d'intégration
+                    sh '''
+                    docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=microservice_ressource -p 3306:3306 -d mysql:5.7
+                    '''
+                    // Attendre que MySQL soit prêt avant de continuer
+                    sh 'sleep 20'
+                }
+            }
+        }
 
         stage('Run Unit Tests') {
             steps {
@@ -68,15 +68,15 @@ pipeline {
             }
         }
 
-        //  stage('Stop MySQL Container') {
-        //     steps {
-        //         script {
-        //             // Arrêter et supprimer le conteneur MySQL
-        //             sh 'docker stop mysql-test'
-        //             sh 'docker rm mysql-test'
-        //         }
-        //     }
-        // }
+         stage('Stop MySQL Container') {
+            steps {
+                script {
+                    // Arrêter et supprimer le conteneur MySQL
+                    sh 'docker stop mysql-test'
+                    sh 'docker rm mysql-test'
+                }
+            }
+        }
 
         stage('Building image') {
             steps {
