@@ -1,5 +1,15 @@
 pipeline {
     agent any
+      environment {
+        MAVEN_HOME = tool 'M2_HOME'
+        DOCKER_IMAGE = 'assilbelhaj/kassil'
+        DOCKER_TAG = 'latest'
+      }
+
+         tools {
+             jdk 'JAVA_HOME'
+             maven 'M2_HOME'
+         }
 
     stages {
         stage('Checkout GitHub') {
@@ -23,16 +33,37 @@ pipeline {
                  sh 'mvn deploy -Dmaven.test.skip=true'
              }
          }
-        stage('Run Unit Tests') {
+        stage('Build & Unit Test') {
                   steps {
                       sh 'mvn test -Dtest=EquipeServiceImplTest'
                   }
               }
 
-              stage('Run All Tests') {
+        stage('Run All Tests') {
                   steps {
                       sh 'mvn test'
                   }
+        }
+         stage("Quality Gate") {
+            steps {
+                timeout(time: 2, unit: 'MINUTES') {
+                  waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+           stage('Package App') {
+              steps {
+                sh 'mvn package -Dtest=EquipeServiceImplTest'
               }
+          }
+    stage('Build Docker Image') {
+      steps {
+        script {
+          docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+        }
+      }
+    }
+
+
     }
 }
