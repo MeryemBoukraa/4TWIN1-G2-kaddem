@@ -52,7 +52,7 @@ pipeline {
 
         stage('MVN Sonarqube') {
              steps {
-                 sh 'mvn sonar:sonar  -Dsonar.token=squ_d8943a160df3e830d68db54aea1a4fefc6d22f9a -Dmaven.test.skip=true'
+                 sh 'mvn sonar:sonar  -Dsonar.token=sqa_f7d516031e481dcda3292b278c1a8d39c1011b36 -Dmaven.test.skip=true'
              }
         }
 
