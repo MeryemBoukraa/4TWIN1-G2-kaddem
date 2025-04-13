@@ -46,6 +46,24 @@ pipeline {
     }
 }
 
+
+      stage('Install') {
+            steps {
+                dir('Back-university1.1') {
+                sh 'mvn install'
+                }
+
+                dir('backgetway') {
+                sh 'mvn install'
+                }
+
+                dir('Back-eurika') {
+                sh 'mvn install'
+                }
+            }
+        }
+
+
  
  
   stage('MVN Nexus') {
