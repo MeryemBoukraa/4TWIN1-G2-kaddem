@@ -116,28 +116,32 @@ pipeline {
       }
     }
 
-    stage('Install Docker Compose') {
-      steps {
-        sh '''
-          if ! command -v docker-compose &> /dev/null
-          then
-            echo "Installing Docker Compose..."
-            sudo apt-get update -y
-            sudo apt-get install -y docker-compose
-          else
-            echo "Docker Compose already installed."
-          fi
-        '''
-      }
-    }
+stage('Install Docker Compose') {
+  steps {
+    sh '''
+      if ! docker compose version &> /dev/null
+      then
+        echo "Installing Docker Compose..."
+        mkdir -p ~/.docker/cli-plugins/
+        curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 \
+          -o ~/.docker/cli-plugins/docker-compose
+        chmod +x ~/.docker/cli-plugins/docker-compose
+      else
+        echo "Docker Compose already installed."
+      fi
+      docker compose version
+    '''
+  }
+}
 
-    stage('Deploy with Docker Compose') {
-      steps {
-        dir('Kassil') {  
-          sh 'docker-compose -f docker-compose.yml up -d'
-        }
-      }
+stage('Deploy with Docker Compose') {
+  steps {
+    dir('Kassil') {  
+      sh 'docker compose -f docker-compose.yml up -d'
     }
+  }
+}
+
 
     stage('Notify Team') {
       steps {
