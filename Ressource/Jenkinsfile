@@ -22,7 +22,15 @@ pipeline {
             steps {
                dir('Ressource') { 
                               sh 'mvn clean compile'
-                     }   }
+                     } 
+                dir('Eureka') {
+                           sh 'mvn clean compile'
+                }
+
+                dir('ApiGetWay - Copie/ApiGetWay') {
+                           sh 'mvn clean compile'
+                }
+            }
         }
 
        
@@ -66,6 +74,14 @@ pipeline {
         stage('Install') {
             steps {
                 dir('Ressource') {
+                sh 'mvn install'
+                }
+
+                dir('ApiGetWay - Copie/ApiGetWay') {
+                sh 'mvn install'
+                }
+
+                dir('Eureka') {
                 sh 'mvn install'
                 }
             }
