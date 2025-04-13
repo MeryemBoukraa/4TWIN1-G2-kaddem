@@ -1,8 +1,8 @@
 package com.example.ressource.entity;
 
 public enum Type {
-    E_Book,
-    Cours,
-    Article
+    E_BOOK,
+    COURS,
+    ARTICLE
 
 }
