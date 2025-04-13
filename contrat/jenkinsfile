@@ -39,7 +39,95 @@ environment {
             }
         }
 
+   stage('Compile Stage') {
+            steps {
+               dir('contrat') { 
+                              sh 'mvn clean compile verify'
+                     } 
+                dir('Eureka') {
+                           sh 'mvn clean compile'
+                }
+
+                dir('ApiGetWay') {
+                           sh 'mvn clean compile'
+                }
+            }
+        }
+
+          stage('Install') {
+             steps {
+                 dir('contrat') {
+                 sh 'mvn install'
+                 }
+
+                 dir('ApiGetWay') {
+                 sh 'mvn install'
+                 }
+
+                 dir('Eureka') {
+                 sh 'mvn install'
+                 }
+             }
+         }
+ stage('Building image') {
+             steps {
+                 dir('contrat') {
+                 sh 'docker build -t louayab/louayabidi-g2-kaddem:1.0 .'
+                 }
+
+                 dir('Eureka') {
+                 sh 'docker build -t louayab/eureka:1.0 .'
+                 }
+
+                 dir('ApiGetWay') {
+                 sh 'docker build -t louayab/apigetway:1.0 .'
+                 }
+             }
+         }
+
+          stage('Building image') {
+             steps {
+                 dir('contrat') {
+                 sh 'docker build -t louayab/louayabidi-g2-kaddem:1.0 .'
+                 }
+
+                 dir('Eureka') {
+                 sh 'docker build -t louayab/eureka:1.0 .'
+                 }
+
+                 dir('ApiGetWay') {
+                 sh 'docker build -t louayab/apigetway:1.0 .'
+                 }
+             }
+         }
+
+         stage('Deploy Image') {
+             steps {
+                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                 }
+                 sh 'docker push louayab/louayabidi-g2-kaddem:1.0'
+                  sh 'docker push louayab/apigetway:1.0'
+                  sh 'docker push louayab/eureka:1.0'
+             }
+      }
+         
+
         
+         stage('Docker Compose Up') {
+             steps {
+                 script {
+                     sh 'docker compose up -d'
+                 }
+             }
+         }
+    }
+      post {
+         always {
+             sh 'docker-compose down'
+         }
+     }
+
 
       
     }
