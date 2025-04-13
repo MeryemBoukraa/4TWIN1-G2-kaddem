@@ -101,8 +101,7 @@ private void handleNewPdfFile(Ressource ressource, MultipartFile pdfFile) {
         ressource.setPdf(filename);
     } catch (IOException e) {
         System.err.println("Erreur lors de la mise à jour du fichier PDF : " + e.getMessage());
-        // Optionnel : garder l'ancien fichier ou vider le champ
-        // ressource.setPdf(null);
+        
     }
 }
 
