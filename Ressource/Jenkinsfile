@@ -94,6 +94,14 @@ pipeline {
                 dir('Ressource') {
                 sh 'docker build -t yosrba/yosrbenamor-g2-kaddem:1.0 .'
                 }
+
+                dir('Eureka') {
+                sh 'docker build -t yosrba/eureka:1.0 .'
+                }
+
+                dir('ApiGetWay - Copie/ApiGetWay') {
+                sh 'docker build -t yosrba/apigetway:1.0 .'
+                }
             }
         }
 
