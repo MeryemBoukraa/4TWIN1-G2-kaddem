@@ -38,11 +38,14 @@ pipeline {
 
  
  
-    stage('MVN Nexus') {
-            steps {
-                sh 'mvn deploy -Dmaven.test.skip=true'
-              }
-       }
+  stage('MVN Nexus') {
+    steps {
+        dir('Back-university1.1') {
+            sh 'mvn deploy -Dmaven.test.skip=true'
+        }
+    }
+}
+
  
  
  
