@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -51,8 +52,7 @@ public Ressource addRessource(Ressource ressource, MultipartFile pdfFile) {
             Files.copy(pdfFile.getInputStream(), this.rootLocation.resolve(filename));
             ressource.setPdf(filename);
         } catch (IOException e) {
-            System.err.println("Erreur lors de l'enregistrement du fichier : " + e.getMessage());
-            // Tu peux soit continuer sans fichier, soit mettre une valeur par défaut
+            logger.error("Erreur lors de l'enregistrement du fichier : {}", e.getMessage(), e);
             ressource.setPdf(null);
         }
     }
