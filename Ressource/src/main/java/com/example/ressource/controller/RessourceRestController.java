@@ -2,6 +2,7 @@ package com.example.ressource.controller;
 
 import com.example.ressource.entity.Ressource;
 import com.example.ressource.entity.Type;
+import org.springframework.http.HttpStatus;
 import com.example.ressource.service.IRessourceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
