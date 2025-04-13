@@ -23,8 +23,8 @@ services:
 
 
   eureka-server:
-    build: ./Eureka 
-    image: oussamaawledsalem/eurika:1.0
+    build: ./Eureka
+    image: oussamaawledsalem/eurika:1.0.0
     container_name: eureka
     ports:
       - "8761:8761"
