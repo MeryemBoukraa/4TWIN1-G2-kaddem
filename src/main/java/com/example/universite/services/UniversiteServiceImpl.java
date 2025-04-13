@@ -39,7 +39,9 @@ return  (universiteRepository.save(u));
         universiteRepository.delete(retrieveUniversite(idUniversite));
     }
     public Universite findUniversiteById(int idUniversite) {
-        Universite u = universiteRepository.findById(idUniversite).get();
+        Universite u = universiteRepository.findById(idUniversite)
+    .orElseThrow(() -> new IllegalArgumentException("Université non trouvée avec l'id : " + idUniversite));
+
         return u;
     }
 
