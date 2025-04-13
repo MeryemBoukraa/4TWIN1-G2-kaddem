@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class RessourceServiceImplTest {
+ class RessourceServiceImplTest {
     @Mock
     private RessourceRepository ressourceRepository;
 
