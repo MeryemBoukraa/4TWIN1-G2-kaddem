@@ -25,5 +25,11 @@ pipeline {
                 sh 'mvn compile'
             }
         }
+         stage('Maven Sonarqube') {
+                     steps {
+                   sh 'mvn sonar:sonar  -Dsonar.token=squ_b0361c8f414b97c3eb1cdcd8737a26dc80b9c146 -Dmaven.test.skip=true'
+                }
+         }
+
     }
 }
