@@ -79,11 +79,11 @@ stage('Building image') {
             sh 'docker build -t meryemboukraa/meryemboukraa-g2-kaddem:1.0.0 .'
         }
           dir('Back-eurika') {
-                sh 'docker build -t yosrba/eureka:1.0 .'
+                sh 'docker build -t meryemboukraa/eureka:1.0 .'
                 }
 
-                dir('backgetway/ApiGetWay') {
-                sh 'docker build -t yosrba/apigetway:1.0 .'
+                dir('backgetway') {
+                sh 'docker build -t meryemboukraa/apigetway:1.0 .'
                 }
     }
 }
