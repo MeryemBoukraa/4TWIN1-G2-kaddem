@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.example</groupId>
     <artifactId>eurika</artifactId>
-    <version>1.0</version>
+    <version>0.0.1-SNAPSHOT</version>
     <name>eurika</name>
     <description>eurika</description>
     <url/>
@@ -46,7 +46,7 @@
 		<repository>
 			<id>deploymentRepo</id>
 			<name>Nexus Repository</name>
-			<url>http://localhost:8081/repository/maven-releases/</url>
+			<url>http://localhost:8081/repository/maven-snapshots/</url>
 		</repository>
 	</distributionManagement>
     <dependencyManagement>
