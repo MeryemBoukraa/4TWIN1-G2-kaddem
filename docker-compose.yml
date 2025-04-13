@@ -1,0 +1,35 @@
+version: '3.9'
+
+services:
+
+  eureka-server:
+    build: ./EUREKA
+    image: assilbelhaj/eureka-server:1.0
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka/
+
+  equipe-service:
+    build: ./Kassil
+    image: assilbelhaj/equipe-service:1.0
+    container_name: equipe-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - eureka-server
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka/
+
+  api-gateway:
+    build: ./Back-apigetway
+    image: assilbelhaj/api-gateway:1.0
+    container_name: api-gateway
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eureka-server
+      - equipe-service
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka/
