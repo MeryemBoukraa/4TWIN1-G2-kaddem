@@ -38,14 +38,15 @@ pipeline {
             steps {
                 dir('contrat') {
                     sh 'mvn test'
-             }
+                }
             }
         }
-stage('Publish Test Results') {
-    steps {
-        junit '**/target/test-classes/*.xml'
-    }
-}
+
+        stage('Publish Test Results') {
+            steps {
+                junit '**/target/test-classes/*.xml'
+            }
+        }
 
 
      //   stage('MVN Sonarqube') {
