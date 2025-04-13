@@ -5,8 +5,15 @@ pipeline {
          jdk 'JAVA_HOME'
          maven 'M2_HOME'
      }
- 
+
+     
+ options {
+    scriptPath('Back-university1.1/Jenkinsfile')
+}
      stages {
+
+
+          
          stage('GIT') {
              steps {
                 git branch: 'MeryemBoukraa-4TWIN1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
