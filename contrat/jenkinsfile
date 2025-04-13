@@ -10,6 +10,7 @@ pipeline {
         DB_URL = 'jdbc:h2:file:./Database/Data/contrat;AUTO_SERVER=TRUE'
         DB_USER = 'louay'
         DB_PASSWORD = ''
+        sonarHostUrl = 'http://192.168.33.10:9000' // Add your correct URL here
     }
 
     stages {
@@ -21,15 +22,22 @@ pipeline {
 
         stage('Compile Stage') {
             steps {
-               dir('contrat') { 
-                 sh 'mvn clean compile verify'
-                     } 
-                dir('eurika') {
+                dir('contrat') {
+                    sh 'mvn clean compile verify'
+                }
+                dir('Eureka') {
                     sh 'mvn clean compile'
                 }
-
                 dir('ApiGetWay') {
-                  sh 'mvn clean compile'
+                    sh 'mvn clean compile'
+                }
+            }
+        }
+
+        stage('Run Tests') {
+            steps {
+                dir('contrat') {
+                    sh 'mvn test'
                 }
             }
         }
@@ -37,17 +45,23 @@ pipeline {
         stage('MVN Sonarqube') {
             steps {
                 dir('contrat') {
-                sh 'mvn sonar:sonar -Dsonar.token=sqa_630d16e1d2841ea09db84166a80d5bc0c1b8ec3e -Dmaven.test.skip=true'
-            }
+                    sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.token=sqa_630d16e1d2841ea09db84166a80d5bc0c1b8ec3e \
+                        -Dsonar.host.url=${sonarHostUrl} \
+                        -Dsonar.tests=src/test/java \
+                        -Dmaven.test.skip=true
+                    '''
                 }
+            }
         }
 
         stage('MVN Nexus') {
             steps {
- dir('contrat') {
-                sh 'mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus::default::http://192.168.188.133:8081//repository/maven-snapshots/'
+                dir('contrat') {
+                    sh 'mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus::default::http://192.168.188.133:8081/repository/maven-snapshots/'
+                }
             }
-}
         }
 
         stage('Modules Build') {
@@ -55,7 +69,7 @@ pipeline {
                 dir('contrat') {
                     sh 'mvn clean compile verify install'
                 }
-                dir('eurika') {
+                dir('Eureka') {
                     sh 'mvn clean compile install'
                 }
                 dir('ApiGetWay') {
@@ -69,7 +83,7 @@ pipeline {
                 dir('contrat') {
                     sh 'docker build -t louayab/louayabidi-g2-kaddem:1.0 .'
                 }
-                dir('eurika') {
+                dir('Eureka') {
                     sh 'docker build -t louayab/eureka:1.0 .'
                 }
                 dir('ApiGetWay') {
