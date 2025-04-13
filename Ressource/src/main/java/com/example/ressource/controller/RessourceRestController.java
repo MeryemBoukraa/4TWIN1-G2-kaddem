@@ -60,25 +60,22 @@ public class RessourceRestController {
     @PutMapping("/{id}")
     public ResponseEntity<Ressource> updateRessource(
             @PathVariable Long id,
-            @RequestParam(required = false) String titre,
-            @RequestParam(required = false) String url,
-            @RequestParam(required = false) String description,
-            @RequestParam Type type,
-            @RequestParam(required = false) String currentPdf, // Pour savoir si on garde l'ancien fichier
-            @RequestParam(required = false) MultipartFile pdfFile) {
-
-        Ressource ressourceDetails = new Ressource();
-        ressourceDetails.setTitre(titre);
-        ressourceDetails.setUrl(url);
-        ressourceDetails.setDescription(description);
-        ressourceDetails.setType(type);
-        ressourceDetails.setPdf("true".equals(currentPdf) ? "keep" : null);
-
+            @RequestPart Ressource ressourceDetails,
+            @RequestPart(required = false) MultipartFile pdfFile) {
+        
         try {
             Ressource updatedRessource = ressourceService.modifyRessource(id, ressourceDetails, pdfFile);
             return ResponseEntity.ok(updatedRessource);
         } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
+            // Gestion des erreurs spécifiques
+            if (e.getMessage().contains("Erreur lors de la mise à jour")) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(null);
+            }
+            if (e.getMessage().contains("Ressource not found")) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
