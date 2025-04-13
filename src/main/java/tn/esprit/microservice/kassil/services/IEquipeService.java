@@ -10,8 +10,5 @@ public interface IEquipeService {
     void deleteEquipe(Integer idEquipe);
     Equipe updateEquipe(Equipe e);
     Equipe retrieveEquipe(Integer equipeId);
-    void evoluerEquipes();
-    Map<String, Long> getEquipeStats();
-    Equipe predictEvolution(Equipe e);
 
 }

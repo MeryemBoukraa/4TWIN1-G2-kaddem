@@ -13,50 +13,37 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/equipe")
-@CrossOrigin(origins = "http://localhost:4200")
 public class EquipeRestController {
-    IEquipeService equipeService;
-    // http://localhost:8089/Kaddem/equipe/retrieve-all-equipes
+    private final IEquipeService equipeService;
+
     @GetMapping("/retrieve-all-equipes")
-    public List<Equipe> getEquipes() {
+    public ResponseEntity<List<Equipe>> getEquipes() {
         List<Equipe> listEquipes = equipeService.retrieveAllEquipes();
-        return listEquipes;
+        return ResponseEntity.ok(listEquipes);
     }
-    // http://localhost:8089/Kaddem/equipe/retrieve-equipe/8
+
     @GetMapping("/retrieve-equipe/{equipe-id}")
-    public Equipe retrieveEquipe(@PathVariable("equipe-id") Integer equipeId) {
-        return equipeService.retrieveEquipe(equipeId);
+    public ResponseEntity<Equipe> retrieveEquipe(@PathVariable("equipe-id") Integer equipeId) {
+        Equipe equipe = equipeService.retrieveEquipe(equipeId);
+        return ResponseEntity.ok(equipe);
     }
 
-    // http://localhost:8089/Kaddem/equipe/add-equipe
     @PostMapping("/add-equipe")
-    public Equipe addEquipe(@RequestBody Equipe e) {
+    public ResponseEntity<Equipe> addEquipe(@RequestBody Equipe e) {
         Equipe equipe = equipeService.addEquipe(e);
-        return equipe;
+        return ResponseEntity.ok(equipe);
     }
 
-    // http://localhost:8089/Kaddem/equipe/remove-equipe/1
     @DeleteMapping("/remove-equipe/{equipe-id}")
-    public void removeEquipe(@PathVariable("equipe-id") Integer equipeId) {
+    public ResponseEntity<Void> removeEquipe(@PathVariable("equipe-id") Integer equipeId) {
         equipeService.deleteEquipe(equipeId);
+        return ResponseEntity.noContent().build();
     }
 
-    // http://localhost:8089/Kaddem/equipe/update-equipe
     @PutMapping("/update-equipe")
-    public Equipe updateEtudiant(@RequestBody Equipe e) {
-        Equipe equipe= equipeService.updateEquipe(e);
-        return equipe;
-    }
-
-    @Scheduled(cron="0 0 13 * * *")
-    @PutMapping("/faireEvoluerEquipes")
-    public ResponseEntity<String> faireEvoluerEquipes() {
-        equipeService.evoluerEquipes();
-        return ResponseEntity.ok("Les équipes ont été mises à jour avec succès.");
-    }
-    @GetMapping("/stats")
-    public ResponseEntity<Map<String, Long>> getStats() {
-        return ResponseEntity.ok(equipeService.getEquipeStats());
+    public ResponseEntity<Equipe> updateEtudiant(@RequestBody Equipe e) {
+        Equipe equipe = equipeService.updateEquipe(e);
+        return ResponseEntity.ok(equipe);
     }
 
 }
