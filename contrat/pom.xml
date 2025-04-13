@@ -80,11 +80,17 @@
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+
+
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
@@ -112,6 +118,17 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.5.2</version>
+				<configuration>
+					<!-- Customize these as needed -->
+					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+					<testFailureIgnore>false</testFailureIgnore>
+				</configuration>
+			</plugin>
+
 		</plugins>
 	</build>
 
