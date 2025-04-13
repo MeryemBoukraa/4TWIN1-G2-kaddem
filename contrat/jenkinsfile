@@ -10,7 +10,7 @@ pipeline {
         DB_URL = 'jdbc:h2:file:./Database/Data/contrat;AUTO_SERVER=TRUE'
         DB_USER = 'louay'
         DB_PASSWORD = ''
-        sonarHostUrl = 'http://192.168.33.10:9000' // Add your correct URL here
+        sonarHostUrl = 'http://192.168.188.133:9000' 
     }
 
     stages {
@@ -25,7 +25,7 @@ pipeline {
                 dir('contrat') {
                     sh 'mvn clean compile verify'
                 }
-                dir('eurike') {
+                dir('eurika') {
                     sh 'mvn clean compile'
                 }
                 dir('ApiGetWay') {
@@ -47,7 +47,7 @@ pipeline {
                 dir('contrat') {
                     sh '''
                         mvn sonar:sonar \
-                        -Dsonar.token=sqa_630d16e1d2841ea09db84166a80d5bc0c1b8ec3e \
+                        -Dsonar.token=sqa_b403a612b91152fdf7493541e8799dc4ac848a9b \
                         -Dsonar.host.url=${sonarHostUrl} \
                         -Dsonar.tests=src/test/java \
                         -Dmaven.test.skip=true
