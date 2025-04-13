@@ -90,7 +90,7 @@ pipeline {
             steps {
                 mail to: 'assil.belhaj@esprit.tn',
                      subject: '✅ DevOps Pipeline Executed Successfully',
-                     body: '''Hello Assil,
+                     body: '''Hello Assil,'''
 
 
             }
