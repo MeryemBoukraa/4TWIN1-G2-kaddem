@@ -78,6 +78,13 @@ stage('Building image') {
         dir('Back-university1.1') {  // Assurer que tu es bien dans le bon répertoire avant de construire l'image
             sh 'docker build -t meryemboukraa/meryemboukraa-g2-kaddem:1.0.0 .'
         }
+          dir('Back-eurika') {
+                sh 'docker build -t yosrba/eureka:1.0 .'
+                }
+
+                dir('backgetway/ApiGetWay') {
+                sh 'docker build -t yosrba/apigetway:1.0 .'
+                }
     }
 }
 
