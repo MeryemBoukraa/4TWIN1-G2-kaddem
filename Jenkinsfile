@@ -52,7 +52,7 @@ pipeline {
             sh 'docker-compose down --remove-orphans'
             sh 'docker system prune -af'
                                // Build and run the containers
-            sh 'docker-compose down && docker-compose up -d --build'
+            sh 'docker-compose up -d --build'
 
         }
     }
@@ -63,7 +63,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh 'echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin'
-                    sh 'docker push oussamaawledsalem/formation:2.0.0'
+                    sh 'docker push oussamaawledsalem/formation:1.0'
+                    sh 'docker push oussamaawledsalem/eurika:1.0'
+                    sh 'docker push oussamaawledsalem/apigetway:1.0'
                 }
             }
         }
