@@ -47,7 +47,7 @@ pipeline {
                 dir('contrat') {
                     sh '''
                         mvn sonar:sonar \
-                        -Dsonar.token=sqa_630d16e1d2841ea09db84166a80d5bc0c1b8ec3e \
+                        -Dsonar.token=sqa_b403a612b91152fdf7493541e8799dc4ac848a9b \
                         -Dsonar.host.url=${sonarHostUrl} \
                         -Dsonar.tests=src/test/java \
                         -Dmaven.test.skip=true
