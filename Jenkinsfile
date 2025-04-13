@@ -21,11 +21,19 @@ pipeline {
       }
     }
 
-    stage('Maven Clean Compile') {
-      steps {
-        sh 'mvn clean compile'
-      }
+    // stage('Maven Clean Compile') {
+    //   steps {
+    //     sh 'mvn clean compile'
+    //   }
+    // }
+stage('Maven Clean Compile') {
+  steps {
+    dir('Kassil') {  
+      sh 'mvn clean compile'
     }
+  }
+}
+   
 
     stage('SonarQube Analysis') {
       steps {
