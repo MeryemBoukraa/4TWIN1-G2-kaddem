@@ -15,7 +15,7 @@ services:
 
 
   ressource:
-    build: ./devops_back
+    build: .
     image: yosrba/yosrbenamor-g2-kaddem:1.0
     container_name: ressource
     ports:
