@@ -71,7 +71,7 @@ pipeline {
                 dir('contrat') {
                     sh 'mvn clean compile verify install'
                 }
-                dir('eurike') {
+                dir('eurika') {
                     sh 'mvn clean compile install'
                 }
                 dir('ApiGetWay') {
@@ -85,8 +85,8 @@ pipeline {
                 dir('contrat') {
                     sh 'docker build -t louayab/louayabidi-g2-kaddem:1.0 .'
                 }
-                dir('eurike') {
-                    sh 'docker build -t louayab/eurike:1.0 .'
+                dir('eurika') {
+                    sh 'docker build -t louayab/eurika:1.0 .'
                 }
                 dir('ApiGetWay') {
                     sh 'docker build -t louayab/apigetway:1.0 .'
@@ -101,7 +101,7 @@ pipeline {
                 }
                 sh 'docker push louayab/louayabidi-g2-kaddem:1.0'
                 sh 'docker push louayab/apigetway:1.0'
-                sh 'docker push louayab/eurike:1.0'
+                sh 'docker push louayab/eurika:1.0'
             }
         }
 
