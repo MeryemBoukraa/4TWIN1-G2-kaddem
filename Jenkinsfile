@@ -29,6 +29,12 @@ pipeline {
         stage('Maven Clean Install') {
             steps {
                 sh 'mvn clean install -DskipTests'
+                 dir('Eureka') {
+                                sh 'mvn install -DskipTests'
+                                }
+                                dir('gateway') {
+                                sh 'mvn install -DskipTests'
+                                }
             }
         }
 
