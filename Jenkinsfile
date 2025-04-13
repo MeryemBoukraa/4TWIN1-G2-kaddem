@@ -20,7 +20,7 @@ pipeline {
                 dir('Eureka') {
                 sh 'mvn clean compile'
                 }
-                dir('ApiGetWay') {
+                dir('getway') {
                 sh 'mvn clean compile'
                 }
             }
