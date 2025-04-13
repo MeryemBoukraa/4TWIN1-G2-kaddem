@@ -4,25 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="83c0c06a-b2ff-44b3-bed9-25022fdbbc32" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/ApiGetWay" beforeDir="false" afterPath="$PROJECT_DIR$/ApiGetWay" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApiGetWay/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApiGetWay/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ApiGetWay/src/main/java/com/example/apigetway/ApiGetWayApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/ApiGetWay/src/main/java/com/example/apigetway/ApiGetWayApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/Database/Data/contrat.mv.db" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/Database/Data/contrat.mv.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/Contrat-0.0.1-SNAPSHOT.jar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/Contrat-0.0.1-SNAPSHOT.jar.original" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/target/maven-archiver/pom.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/surefire-reports/TEST-com.example.contrat.ContratApplicationTests.xml" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/target/surefire-reports/TEST-com.example.contrat.ContratApplicationTests.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/surefire-reports/com.example.contrat.ContratApplicationTests.txt" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/target/surefire-reports/com.example.contrat.ContratApplicationTests.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/contrat/target/test-classes/com/example/contrat/ContratApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/contrat/target/test-classes/com/example/contrat/ContratApplicationTests.class" afterDir="false" />
-    </list>
+    <list default="true" id="83c0c06a-b2ff-44b3-bed9-25022fdbbc32" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
