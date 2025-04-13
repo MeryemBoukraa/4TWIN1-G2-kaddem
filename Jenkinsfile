@@ -1,90 +1,121 @@
 pipeline {
-    agent any
+  agent any
 
-    environment {
-        MAVEN_HOME = tool 'M2_HOME'
-        DOCKER_IMAGE = 'assilbelhaj/kassil'
-        DOCKER_TAG = 'latest'
+  environment {
+    MAVEN_HOME = tool 'M2_HOME'
+    DOCKER_IMAGE = 'assilbelhaj/kassil'
+    DOCKER_TAG = 'latest'
+    NEXUS_REPO = 'http://192.168.33.10:8081/repository/maven-releases/'
+  }
+
+  tools {
+    jdk 'JAVA_HOME'
+    maven 'M2_HOME'
+  }
+
+  stages {
+
+    stage('Checkout GitHub') {
+      steps {
+        git branch: 'AssilBelhaj-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
+      }
     }
 
-    tools {
-        jdk 'JAVA_HOME'
-        maven 'M2_HOME'
+    stage('Maven Clean Compile') {
+      steps {
+        sh 'mvn clean compile'
+      }
     }
 
-    stages {
-        stage('Checkout GitHub') {
-            steps {
-                git branch: 'AssilBelhaj-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
-            }
+    stage('SonarQube Analysis') {
+      steps {
+        withSonarQubeEnv('SonarQube') {
+          sh 'mvn sonar:sonar -Dsonar.token=squ_b0361c8f414b97c3eb1cdcd8737a26dc80b9c146 -Dmaven.test.skip=true'
         }
-
-        stage('Maven Clean Compile') {
-            steps {
-                sh 'mvn clean compile'
-            }
-        }
-
-        stage('Maven Sonarqube') {
-            steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh 'mvn sonar:sonar -Dsonar.token=squ_b0361c8f414b97c3eb1cdcd8737a26dc80b9c146 -Dmaven.test.skip=true'
-                }
-            }
-        }
-
-        stage('MVN Nexus') {
-            steps {
-                sh 'mvn deploy -Dmaven.test.skip=true'
-            }
-        }
-
-        stage('Build & Unit Test') {
-            steps {
-                sh 'mvn test -Dtest=EquipeServiceImplTest'
-                junit '**/target/surefire-reports/*.xml'
-            }
-        }
-
-        stage('Run All Tests') {
-            steps {
-                sh 'mvn test'
-                junit '**/target/surefire-reports/*.xml'
-            }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
-        stage('Package App') {
-            steps {
-                sh 'mvn package -Dtest=EquipeServiceImplTest'
-                junit '**/target/surefire-reports/*.xml'
-            }
-        }
-
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
-                }
-            }
-        }
-
-        stage('Push to DockerHub') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                    sh """
-                        echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
-                        docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    """
-                }
-            }
-        }
+      }
     }
+
+    stage('Run Unit Tests') {
+      steps {
+        sh 'mvn test -Dtest=EquipeServiceImplTest'
+        junit '**/target/surefire-reports/*.xml'
+      }
+    }
+
+    stage('Run All Tests') {
+      steps {
+        sh 'mvn test'
+        junit '**/target/surefire-reports/*.xml'
+      }
+    }
+
+    stage('SonarQube Quality Gate') {
+      steps {
+        timeout(time: 2, unit: 'MINUTES') {
+          waitForQualityGate abortPipeline: true
+        }
+      }
+    }
+
+    stage('Package Application') {
+      steps {
+        sh 'mvn package -Dtest=EquipeServiceImplTest'
+        junit '**/target/surefire-reports/*.xml'
+      }
+    }
+
+    stage('Publish to Nexus') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+          sh """
+            mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_REPO} \
+              -Dnexus.user=$NEXUS_USER -Dnexus.password=$NEXUS_PASS
+          """
+        }
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        script {
+          docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+        }
+      }
+    }
+
+    stage('Push Docker Image to DockerHub') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+          sh """
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+            docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+          """
+        }
+      }
+    }
+
+    stage('Deploy with Docker Compose') {
+      steps {
+        sh 'docker-compose -f docker-compose.yml up -d'
+      }
+    }
+
+    stage('Notify Team') {
+      steps {
+        mail to: 'team@kassil.tn',
+             subject: "✅ Kassil Pipeline Success",
+             body: "The pipeline completed successfully.\n\nDetails: ${env.BUILD_URL}",
+             replyTo: 'no-reply@mailtrap.io'
+      }
+    }
+  }
+
+  post {
+    failure {
+      mail to: 'team@kassil.tn',
+           subject: "❌ Kassil Pipeline Failed",
+           body: "The pipeline failed.\n\nCheck the logs here: ${env.BUILD_URL}",
+           replyTo: 'no-reply@mailtrap.io'
+    }
+  }
 }
