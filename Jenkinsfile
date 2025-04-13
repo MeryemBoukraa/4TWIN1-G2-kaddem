@@ -64,16 +64,16 @@ pipeline {
          }
  
      
-       stage('Deploy Image') {
+   stage('Deploy Image') {
     steps {
         withCredentials([usernamePassword(
             credentialsId: 'docker-hub-credentials',
             usernameVariable: 'DOCKER_USERNAME',
             passwordVariable: 'DOCKER_PASSWORD'
         )]) {
-            // Méthode plus sécurisée que echo + pipe
+            // Connexion Docker sans interaction avec --password-stdin
             sh '''
-                docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
                 docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0.0
             '''
         }
@@ -88,5 +88,6 @@ stage('Run Docker Compose') {
         sh 'docker compose up -d --build --force-recreate'
     }
 }
+
      }
 }
