@@ -83,13 +83,13 @@ pipeline {
         stage('Docker Build') {
             steps {
                 dir('contrat') {
-                    sh 'docker build -t louayab/louayabidi-g2-kaddem:1.0 .'
+                    sh 'docker build -t ablouu/louayabidi-g2-kaddem:1.0 .'
                 }
                 dir('eurika') {
-                    sh 'docker build -t louayab/eurika:1.0 .'
+                    sh 'docker build -t ablouu/eurika:1.0 .'
                 }
                 dir('ApiGetWay') {
-                    sh 'docker build -t louayab/apigetway:1.0 .'
+                    sh 'docker build -t ablouu/apigetway:1.0 .'
                 }
             }
         }
@@ -99,9 +99,9 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
-                sh 'docker push louayab/louayabidi-g2-kaddem:1.0'
-                sh 'docker push louayab/apigetway:1.0'
-                sh 'docker push louayab/eurika:1.0'
+                sh 'docker push ablouu/louayabidi-g2-kaddem:1.0'
+                sh 'docker push ablouu/apigetway:1.0'
+                sh 'docker push ablouu/eurika:1.0'
             }
         }
 
