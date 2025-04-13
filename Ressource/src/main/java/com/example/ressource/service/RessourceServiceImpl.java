@@ -21,6 +21,7 @@ public class RessourceServiceImpl implements IRessourceService {
     RessourceRepository ressourceRepository;
     SummaryService summary;
     private final Path rootLocation = Paths.get("upload-dir");
+    private static final Logger logger = LoggerFactory.getLogger(RessourceServiceImpl.class);
 
     @Override
     public List<Ressource> retrieveAllRessources() {
