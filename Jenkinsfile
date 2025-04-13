@@ -49,12 +49,14 @@ pipeline {
  
  
  
-          stage("MOCKITO") {
-            steps {
-                 sh "mvn test -Dtest=mvn test -Dtest=com.example.universite.UniversiteApplicationTests"
-             }
-         }
- 
+         stage('MOCKITO') {
+    steps {
+        dir('Back-university1.1') {
+            sh 'mvn test -Dtest=com.example.universite.UniversiteApplicationTests'
+        }
+    }
+}
+
          stage('Run Unit Tests') {
               steps {
                  sh 'mvn test -Dtest=UniversiteServiceImplTest'
