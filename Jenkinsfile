@@ -122,7 +122,7 @@ stage('Check Docker Version') {
     }
 }
 
-stage('Deploy Image') {
+sstage('Deploy Image') {
     steps {
         withCredentials([usernamePassword(
             credentialsId: 'docker-hub-credentials',
@@ -134,8 +134,12 @@ stage('Deploy Image') {
                 docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0.0
             '''
         }
+        sh 'docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0'
+        sh 'docker push meryemboukraa/apigetway:1.0'
+        sh 'docker push meryemboukraa/eureka:1.0'
     }
 }
+
 
 
 // stage('Run Docker Compose') {
