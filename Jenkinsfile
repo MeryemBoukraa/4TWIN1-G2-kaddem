@@ -38,9 +38,10 @@ pipeline {
 
             // 🛠️ Build the new image
             sh 'docker-compose down --remove-orphans'
-
+            sh 'docker system prune -af'
                                // Build and run the containers
             sh 'docker-compose up -d --build'
+
         }
     }
 }
