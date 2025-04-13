@@ -9,13 +9,13 @@ class TypeTest {
     void testEnumValues() {
         Type[] values = Type.values();
         assertEquals(3, values.length);
-        assertArrayEquals(new Type[]{Type.E_BOOK, Type.COURS, Type.ARTICLE}, values);
+        assertArrayEquals(new Type[]{Type.E_Book, Type.Cours, Type.Article}, values);
     }
 
     @Test
     void testEnumValueOf() {
-        assertEquals(Type.E_BOOK, Type.valueOf("E_BOOK"));
-        assertEquals(Type.COURS, Type.valueOf("COURS"));
-        assertEquals(Type.ARTICLE, Type.valueOf("ARTICLE"));
+        assertEquals(Type.E_Book, Type.valueOf("E_Book"));
+        assertEquals(Type.Cours, Type.valueOf("Cours"));
+        assertEquals(Type.Article, Type.valueOf("Article"));
     }
 }

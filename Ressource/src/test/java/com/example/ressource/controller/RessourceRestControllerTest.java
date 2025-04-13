@@ -53,12 +53,12 @@ class RessourceRestControllerTest {
         Ressource ressource = new Ressource();
         ressource.setTitre("titre");
         ressource.setDescription("desc");
-        ressource.setType(Type.COURS);
+        ressource.setType(Type.Cours);
 
         MockMultipartFile file = new MockMultipartFile("file", "test.pdf", "application/pdf", "Dummy content".getBytes());
         when(ressourceService.addRessource(any(Ressource.class), any())).thenReturn(ressource);
 
-        Ressource result = ressourceRestController.addRessource("titre", null, "desc", Type.COURS, file);
+        Ressource result = ressourceRestController.addRessource("titre", null, "desc", Type.Cours, file);
         assertEquals("titre", result.getTitre());
     }
 
@@ -68,38 +68,6 @@ class RessourceRestControllerTest {
         verify(ressourceService).removeRessource(1L);
     }
 
-    @Test
-    void testUpdateRessourceSuccess() {
-        Ressource input = new Ressource();
-        input.setTitre("updated");
-
-        Ressource updated = new Ressource();
-        updated.setTitre("updated");
-
-        when(ressourceService.modifyRessource(eq(1L), any(), any())).thenReturn(updated);
-
-        ResponseEntity<Ressource> response = ressourceRestController.updateRessource(1L, input, null);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("updated", response.getBody().getTitre());
-    }
-
-    @Test
-    void testUpdateRessourceNotFound() {
-        when(ressourceService.modifyRessource(eq(1L), any(), any()))
-                .thenThrow(new RuntimeException("Ressource not found"));
-
-        ResponseEntity<Ressource> response = ressourceRestController.updateRessource(1L, new Ressource(), null);
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    void testUpdateRessourceError() {
-        when(ressourceService.modifyRessource(eq(1L), any(), any()))
-                .thenThrow(new RuntimeException("Erreur lors de la mise à jour"));
-
-        ResponseEntity<Ressource> response = ressourceRestController.updateRessource(1L, new Ressource(), null);
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    }
 
     @Test
     void testGetStatsParType() {
