@@ -57,50 +57,51 @@ pipeline {
     }
 }
 
-         stage('Run Unit Tests') {
-              steps {
-                 sh 'mvn test -Dtest=UniversiteServiceImplTest'
-              }
-          }
-          stage('Run Tests') {
-              steps {
-                 sh 'mvn test'
-              }
-          } 
- 
- 
- 
- 
- 
-        stage('Building image') {
-             steps {
-                 sh 'docker build -t meryemboukraa/meryemboukraa-g2-kaddem:1.0.0 .'
-             }
+     stage('Run Unit Tests') {
+    steps {
+        dir('Back-university1.1') {  // Ajout de l'option dir pour spécifier le bon répertoire
+            sh 'mvn test -Dtest=UniversiteServiceImplTest'
+        }
+    }
 }
 
+stage('Run Tests') {
+    steps {
+        dir('Back-university1.1') {  // Ajout de l'option dir ici aussi
+            sh 'mvn test'
+        }
+    }
+}
 
+stage('Building image') {
+    steps {
+        dir('Back-university1.1') {  // Assurer que tu es bien dans le bon répertoire avant de construire l'image
+            sh 'docker build -t meryemboukraa/meryemboukraa-g2-kaddem:1.0.0 .'
+        }
+    }
+}
 
-         stage('Check Docker Version') {
-           steps {
-                sh 'docker --version'  // Vérifie la version de Docker
-           }
-         }
+stage('Check Docker Version') {
+    steps {
+        sh 'docker --version'  // Aucune modification nécessaire ici
+    }
+}
 
- stage('Deploy Image') {
-     steps {
-         withCredentials([usernamePassword(
-             credentialsId: 'docker-hub-credentials',
-             usernameVariable: 'DOCKER_USERNAME',
-             passwordVariable: 'DOCKER_PASSWORD'
-         )]) {
-             // Connexion Docker sans interaction avec --password-stdin
-             sh '''
-                 echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                 docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0.0
-             '''
-         }
-     }
- }
+stage('Deploy Image') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'docker-hub-credentials',
+            usernameVariable: 'DOCKER_USERNAME',
+            passwordVariable: 'DOCKER_PASSWORD'
+        )]) {
+            sh '''
+                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0.0
+            '''
+        }
+    }
+}
+
 
 // stage('Run Docker Compose') {
 //     steps {
