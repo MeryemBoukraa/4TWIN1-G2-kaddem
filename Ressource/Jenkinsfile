@@ -111,6 +111,8 @@ pipeline {
                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
                 sh 'docker push yosrba/yosrbenamor-g2-kaddem:1.0'
+                 sh 'docker push yosrba/apigetway:1.0'
+                 sh 'docker push yosrba/eureka:1.0'
             }
         }
          
