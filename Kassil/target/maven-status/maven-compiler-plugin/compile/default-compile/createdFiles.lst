@@ -1,0 +1,7 @@
+tn\esprit\microservice\kassil\KassilApplication.class
+tn\esprit\microservice\kassil\entities\Equipe.class
+tn\esprit\microservice\kassil\repositories\EquipeRepository.class
+tn\esprit\microservice\kassil\services\IEquipeService.class
+tn\esprit\microservice\kassil\Controller\EquipeRestController.class
+tn\esprit\microservice\kassil\services\EquipeServiceImpl.class
+tn\esprit\microservice\kassil\entities\Niveau.class
