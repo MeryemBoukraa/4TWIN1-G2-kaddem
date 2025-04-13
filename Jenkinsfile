@@ -62,8 +62,7 @@ pipeline {
                 sh 'docker build -t meryemboukraa/meryemboukraa-g2-kaddem:1.0.0 .'
             }
         }
-
-        stages {
+        
         stage('Deploy Image') {
             steps {
                 withCredentials([usernamePassword(
