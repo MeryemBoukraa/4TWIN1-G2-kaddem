@@ -6,6 +6,7 @@ import com.example.ressource.service.IRessourceService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 
@@ -78,7 +79,7 @@ class RessourceRestControllerTest {
         when(ressourceService.modifyRessource(eq(1L), any(), any())).thenReturn(updated);
 
         ResponseEntity<Ressource> response = ressourceRestController.updateRessource(1L, input, null);
-        assertEquals(200, response.getStatusCodeValue());
+        assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals("updated", response.getBody().getTitre());
     }
 
@@ -88,7 +89,7 @@ class RessourceRestControllerTest {
                 .thenThrow(new RuntimeException("Ressource not found"));
 
         ResponseEntity<Ressource> response = ressourceRestController.updateRessource(1L, new Ressource(), null);
-        assertEquals(404, response.getStatusCodeValue());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
@@ -97,7 +98,7 @@ class RessourceRestControllerTest {
                 .thenThrow(new RuntimeException("Erreur lors de la mise à jour"));
 
         ResponseEntity<Ressource> response = ressourceRestController.updateRessource(1L, new Ressource(), null);
-        assertEquals(500, response.getStatusCodeValue());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
