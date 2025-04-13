@@ -18,6 +18,7 @@ pipeline {
          }
  
          stage('Compile Stage') {
+             dir('Back-university1.1')
              steps {
                 sh 'mvn clean compile'
              }
