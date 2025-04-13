@@ -20,19 +20,19 @@ pipeline {
             }
         }
 
-        stage('Compile Stage') {
-            steps {
-                dir('contrat') {
-                    sh 'mvn clean compile verify'
-                }
-                dir('eurika') {
-                    sh 'mvn clean compile'
-                }
-                dir('ApiGetWay') {
-                    sh 'mvn clean compile'
-                }
-            }
-        }
+      //  stage('Compile Stage') {
+       //     steps {
+       //         dir('contrat') {
+            //        sh 'mvn clean compile verify'
+             //   }
+            //    dir('eurika') {
+              //      sh 'mvn clean compile'
+             //   }
+             //   dir('ApiGetWay') {
+              //      sh 'mvn clean compile'
+              //  }
+           // }
+    //   }
 
      //   stage('Run Tests') {
         //    steps {
@@ -58,9 +58,11 @@ pipeline {
 
      stage('MVN Nexus') {
             steps {
+ dir('contrat') {
                 sh 'mvn deploy -Dmaven.test.skip=true'
             }
         }
+}
 
         
 
