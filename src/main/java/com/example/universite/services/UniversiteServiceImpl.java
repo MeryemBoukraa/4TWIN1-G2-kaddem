@@ -40,7 +40,8 @@ return  (universiteRepository.save(u));
     }
     public Universite findUniversiteById(int idUniversite) {
         Universite u = universiteRepository.findById(idUniversite)
-    .orElseThrow(() -> new IllegalArgumentException("Université non trouvée avec l'id : " + idUniversite));
+   .orElseThrow(() -> new IllegalArgumentException("Université introuvable"));
+
 
         return u;
     }
