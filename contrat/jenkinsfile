@@ -6,41 +6,113 @@ pipeline {
         maven 'M2_HOME'
     }
 
-environment {
+    environment {
         DB_URL = 'jdbc:h2:file:./Database/Data/contrat;AUTO_SERVER=TRUE'
         DB_USER = 'louay'
         DB_PASSWORD = ''
+        sonarHostUrl = 'http://192.168.33.10:9000' // Add your correct URL here
     }
 
     stages {
         stage('GIT') {
             steps {
-               git branch: 'Louayabidi-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
+                git branch: 'Louayabidi-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
             }
         }
 
         stage('Compile Stage') {
             steps {
-               sh 'mvn clean compile'
+                dir('contrat') {
+                    sh 'mvn clean compile verify'
+                }
+                dir('eurike') {
+                    sh 'mvn clean compile'
+                }
+                dir('ApiGetWay') {
+                    sh 'mvn clean compile'
+                }
             }
         }
 
-
-            stage('MVN Sonarqube') {
+        stage('Run Tests') {
             steps {
-                // Lancer l'analyse SonarQube (ne pas inclure les tests)
-                sh 'mvn sonar:sonar -Dsonar.token=sqa_630d16e1d2841ea09db84166a80d5bc0c1b8ec3e -Dmaven.test.skip=true'
+                dir('contrat') {
+                    sh 'mvn test'
+                }
             }
         }
 
-         stage('MVN Nexus') {
+        stage('MVN Sonarqube') {
             steps {
-               sh 'mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus::default::http://192.168.188.133:8081//repository/maven-snapshots/'
+                dir('contrat') {
+                    sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.token=sqa_630d16e1d2841ea09db84166a80d5bc0c1b8ec3e \
+                        -Dsonar.host.url=${sonarHostUrl} \
+                        -Dsonar.tests=src/test/java \
+                        -Dmaven.test.skip=true
+                    '''
+                }
             }
         }
 
-        
+        stage('MVN Nexus') {
+            steps {
+                dir('contrat') {
+                    sh 'mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus::default::http://192.168.188.133:8081/repository/maven-snapshots/'
+                }
+            }
+        }
 
-      
+        stage('Modules Build') {
+            steps {
+                dir('contrat') {
+                    sh 'mvn clean compile verify install'
+                }
+                dir('eurike') {
+                    sh 'mvn clean compile install'
+                }
+                dir('ApiGetWay') {
+                    sh 'mvn clean compile install'
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                dir('contrat') {
+                    sh 'docker build -t louayab/louayabidi-g2-kaddem:1.0 .'
+                }
+                dir('eurike') {
+                    sh 'docker build -t louayab/eurike:1.0 .'
+                }
+                dir('ApiGetWay') {
+                    sh 'docker build -t louayab/apigetway:1.0 .'
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                }
+                sh 'docker push louayab/louayabidi-g2-kaddem:1.0'
+                sh 'docker push louayab/apigetway:1.0'
+                sh 'docker push louayab/eurike:1.0'
+            }
+        }
+
+        stage('Docker Compose Up') {
+            steps {
+                sh 'docker compose up -d'
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker compose down'
+        }
     }
 }
