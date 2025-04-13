@@ -5,7 +5,7 @@ pipeline {
     MAVEN_HOME = tool 'M2_HOME'
     DOCKER_IMAGE = 'assilbelhaj/kassil'
     DOCKER_TAG = 'latest'
-    NEXUS_REPO = 'http://192.168.33.10:8081/repository/maven-releases/'
+    NEXUS_REPO = 'http://192.168.33.10:8081/repository/maven-snapshots/'
   }
 
   tools {
@@ -68,8 +68,10 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
           sh """
-            mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_REPO} \
-              -Dnexus.user=$NEXUS_USER -Dnexus.password=$NEXUS_PASS
+            mvn deploy \
+              -DaltDeploymentRepository=nexus::default::${NEXUS_REPO} \
+              -Dnexus.user=$NEXUS_USER \
+              -Dnexus.password=$NEXUS_PASS
           """
         }
       }
@@ -105,7 +107,7 @@ pipeline {
         mail to: 'team@kassil.tn',
              subject: "✅ Kassil Pipeline Success",
              body: "The pipeline completed successfully.\n\nDetails: ${env.BUILD_URL}",
-             replyTo: 'no-reply@mailtrap.io'
+             replyTo: 'no-reply@kassil.tn' // use a valid domain or one configured in your SMTP
       }
     }
   }
@@ -115,7 +117,7 @@ pipeline {
       mail to: 'team@kassil.tn',
            subject: "❌ Kassil Pipeline Failed",
            body: "The pipeline failed.\n\nCheck the logs here: ${env.BUILD_URL}",
-           replyTo: 'no-reply@mailtrap.io'
+           replyTo: 'no-reply@kassil.tn'
     }
   }
 }
