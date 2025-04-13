@@ -38,7 +38,7 @@ pipeline {
 
          stage("MOCKITO") {
             steps {
-                sh "mvn test -Dtest=mvn test -Dtest=com.example.universite.UniversiteApplicationTests"
+                sh "mvn test -Dtest=com.example.universite.UniversiteApplicationTests"
             }
         }
 
