@@ -23,10 +23,8 @@ services:
 
 
   eureka-server:
-    build:
-      context: .  # Build from the root directory (4TWIN1-G2-kaddem)
-      dockerfile: Eureka/Dockerfile  # Path to Dockerfile
-    image: oussamaawledsalem/eurika:1.0.0
+    build: ./Eureka 
+    image: oussamaawledsalem/eurika:1.0
     container_name: eureka
     ports:
       - "8761:8761"
