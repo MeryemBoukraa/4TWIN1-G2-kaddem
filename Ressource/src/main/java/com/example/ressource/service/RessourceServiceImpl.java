@@ -59,49 +59,62 @@ public class RessourceServiceImpl implements IRessourceService {
     }
 
     @Override
-    public Ressource modifyRessource(Long id, Ressource ressourceDetails, MultipartFile pdfFile) {
-        return ressourceRepository.findById(id)
-                .map(ressource -> {
-                    // Mettre à jour les champs simples
-                    ressource.setTitre(ressourceDetails.getTitre());
-                    ressource.setUrl(ressourceDetails.getUrl());
-                    ressource.setDescription(ressourceDetails.getDescription());
-                    ressource.setType(ressourceDetails.getType());
+public Ressource modifyRessource(Long id, Ressource ressourceDetails, MultipartFile pdfFile) {
+    return ressourceRepository.findById(id)
+            .map(ressource -> {
+                updateSimpleFields(ressource, ressourceDetails);
+                handlePdfFile(ressource, pdfFile, ressourceDetails);
+                return ressourceRepository.save(ressource);
+            })
+            .orElseThrow(() -> new RuntimeException("Ressource not found with id " + id));
+}
 
-                    // Gestion du fichier PDF
-                    if (pdfFile != null && !pdfFile.isEmpty()) {
-                        try {
-                            // Supprimer l'ancien fichier s'il existe
-                            if (ressource.getPdf() != null) {
-                                Path oldFile = rootLocation.resolve(ressource.getPdf());
-                                Files.deleteIfExists(oldFile);
-                            }
+private void updateSimpleFields(Ressource ressource, Ressource ressourceDetails) {
+    ressource.setTitre(ressourceDetails.getTitre());
+    ressource.setUrl(ressourceDetails.getUrl());
+    ressource.setDescription(ressourceDetails.getDescription());
+    ressource.setType(ressourceDetails.getType());
+}
 
-                            // Enregistrer le nouveau fichier
-                            String filename = UUID.randomUUID() + "-" + pdfFile.getOriginalFilename();
-                            Files.copy(pdfFile.getInputStream(), this.rootLocation.resolve(filename));
-                            ressource.setPdf(filename);
-                        } catch (IOException e) {
-                            throw new RuntimeException("Erreur lors de la mise à jour du fichier", e);
-                        }
-                    } else if (ressourceDetails.getPdf() == null) {
-                        // Si pdf est explicitement null (suppression du fichier)
-                        if (ressource.getPdf() != null) {
-                            try {
-                                Path oldFile = rootLocation.resolve(ressource.getPdf());
-                                Files.deleteIfExists(oldFile);
-                            } catch (IOException e) {
-                                throw new RuntimeException("Erreur lors de la suppression de l'ancien fichier", e);
-                            }
-                        }
-                        ressource.setPdf(null);
-                    }
-                    // Si pdfFile est null mais que ressourceDetails.getPdf() n'est pas null, on garde l'ancien fichier
-
-                    return ressourceRepository.save(ressource);
-                })
-                .orElseThrow(() -> new RuntimeException("Ressource non trouvée avec l'id: " + id));
+private void handlePdfFile(Ressource ressource, MultipartFile pdfFile, Ressource ressourceDetails) {
+    if (pdfFile != null && !pdfFile.isEmpty()) {
+        handleNewPdfFile(ressource, pdfFile);
+    } else if (ressourceDetails.getPdf() == null) {
+        handlePdfDeletion(ressource);
     }
+}
+
+private void handleNewPdfFile(Ressource ressource, MultipartFile pdfFile) {
+    try {
+        deleteExistingPdfFile(ressource);
+        String filename = storeNewPdfFile(pdfFile);
+        ressource.setPdf(filename);
+    } catch (IOException e) {
+        throw new RuntimeException("Erreur lors de la mise à jour du fichier", e);
+    }
+}
+
+private void handlePdfDeletion(Ressource ressource) {
+    try {
+        deleteExistingPdfFile(ressource);
+        ressource.setPdf(null);
+    } catch (IOException e) {
+        throw new RuntimeException("Erreur lors de la suppression de l'ancien fichier", e);
+    }
+}
+
+private void deleteExistingPdfFile(Ressource ressource) throws IOException {
+    if (ressource.getPdf() != null) {
+        Path oldFile = rootLocation.resolve(ressource.getPdf());
+        Files.deleteIfExists(oldFile);
+    }
+}
+
+private String storeNewPdfFile(MultipartFile pdfFile) throws IOException {
+    String filename = UUID.randomUUID() + "-" + pdfFile.getOriginalFilename();
+    Files.copy(pdfFile.getInputStream(), this.rootLocation.resolve(filename));
+    return filename;
+}
 
 
 
