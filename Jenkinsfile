@@ -34,6 +34,14 @@ pipeline {
             }
         }
 
+
+
+         stage("MOCKITO") {
+            steps {
+                sh "mvn test -Dtest=mvn test -Dtest=com.example.universite.UniversiteApplicationTests"
+            }
+        }
+
         stage('Run Unit Tests') {
             steps {
                 sh 'mvn test -Dtest=UniversiteServiceImplTest'
@@ -46,11 +54,7 @@ pipeline {
         } 
 
 
-        stage("MOCKITO") {
-            steps {
-                sh "mvn test -Dtest=mvn test -Dtest=com.example.universite.UniversiteApplicationTests"
-            }
-        }
+    
         
 
         stage('Building image') {
