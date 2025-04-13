@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+  contrat:
+    build: ./contrat
+    image: ablouu/contrat
+    container_name: contrat
+    ports:
+      - "8087:8087"
+    depends_on:
+      - eureka-server
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  eureka-server:
+    build: ./eurika
+    image: ablouu/eurika
+    container_name: eurika
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
+
+  api-gateway:
+    build: ./ApiGetWay  
+    image: ablouu/apigetaway
+    container_name: apigetaway
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eureka-server
+      - contrat
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka
