@@ -13,8 +13,6 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -73,7 +71,7 @@ class RessourceServiceImplTest {
     }
 
     @Test
-    void testAddRessource_WithPdf() throws IOException {
+    void testAddRessource_WithPdf()  {
         MockMultipartFile file = new MockMultipartFile("file", "test.pdf", "application/pdf", "PDF Content".getBytes());
         when(ressourceRepository.save(any(Ressource.class))).thenReturn(ressource);
 
