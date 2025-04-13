@@ -28,7 +28,7 @@ pipeline {
                     sh 'mvn clean compile'
                 }
 
-                dir('ApiGetWay - Copie/ApiGetWay') {
+                dir('ApiGetWay') {
                   sh 'mvn clean compile'
                 }
             }
