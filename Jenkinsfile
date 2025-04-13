@@ -70,20 +70,7 @@ pipeline {
             }
         }
 
-        stage('Docker Run') {
-            steps {
-                script {
-            // Stop and remove the container if it exists
-            sh '''
-                if [ "$(docker ps -aq -f name=springDevops)" ]; then
-                  docker stop springDevops || true
-                  docker rm springDevops || true
-                fi
-            '''
-        }
-                sh 'docker run -d --name springDevops -p 8089:8089 oussamaawledsalem/formation:2.0.0'
-            }
-        }
+
 
 stage('SonarQube Analysis') {
     steps {
