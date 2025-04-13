@@ -104,6 +104,19 @@ pipeline {
                 }
             }
         }
+            stage('Pull and Run on Vagrant VM') {
+            steps {
+                script {
+                    sh """
+                        
+                        docker-compose pull
+                        
+                        docker-compose up -d
+                        EOF
+                    """
+                }
+            }
+        }
 
     }
 
