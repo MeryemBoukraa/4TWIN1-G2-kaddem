@@ -10,7 +10,7 @@ pipeline {
         DB_URL = 'jdbc:h2:file:./Database/Data/contrat;AUTO_SERVER=TRUE'
         DB_USER = 'louay'
         DB_PASSWORD = ''
-        sonarHostUrl = 'http://192.168.33.10:9000' // Add your correct URL here
+        sonarHostUrl = 'http://192.168.188.133:9000/' 
     }
 
     stages {
