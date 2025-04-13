@@ -100,7 +100,7 @@ private void handleNewPdfFile(Ressource ressource, MultipartFile pdfFile) {
         String filename = storeNewPdfFile(pdfFile);
         ressource.setPdf(filename);
     } catch (IOException e) {
-        System.err.println("Erreur lors de la mise à jour du fichier PDF : " + e.getMessage());
+            logger.error("Erreur lors de la mise à jour du fichier PDF : {}", e.getMessage(), e);
         
     }
 }
@@ -111,8 +111,8 @@ private void handlePdfDeletion(Ressource ressource) {
         deleteExistingPdfFile(ressource);
         ressource.setPdf(null);
     } catch (IOException e) {
-        System.err.println("Erreur lors de la suppression de l'ancien fichier : " + e.getMessage());
-        // Tu peux aussi ignorer, ou logger plus proprement si besoin
+    logger.error("Erreur lors de la suppression de l'ancien fichier PDF : {}", e.getMessage(), e);
+
     }
 }
 
