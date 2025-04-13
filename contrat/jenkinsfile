@@ -56,12 +56,12 @@ pipeline {
             }
         }
 
-        stage('MVN Nexus') {
+     stage('MVN Nexus') {
             steps {
-                dir('contrat') {
-                    sh 'mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus::default::http://192.168.188.133:8081/repository/maven-snapshots/'
-                }
+                sh 'mvn deploy -Dmaven.test.skip=true'
             }
+        }
+
         }
 
         stage('Modules Build') {
