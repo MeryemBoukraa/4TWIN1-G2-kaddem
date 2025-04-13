@@ -28,11 +28,14 @@ pipeline {
  
  
  
-        stage('MVN Sonarqube') {
-              steps {
-                 sh 'mvn sonar:sonar  -Dsonar.token=squ_bbe8b39c70c162231659881639677022f6a332aa -Dmaven.test.skip=true'
-            }
+      stage('MVN Sonarqube') {
+    steps {
+        dir('Back-university1.1') {
+            sh 'mvn sonar:sonar -Dsonar.token=squ_bbe8b39c70c162231659881639677022f6a332aa -Dmaven.test.skip=true'
         }
+    }
+}
+
  
  
     stage('MVN Nexus') {
