@@ -28,28 +28,37 @@ public class RessourceServiceImpl implements IRessourceService {
 
     @Override
     public Ressource retrieveRessource(Long rId) {
-        return ressourceRepository.findById(rId).get();
+        Optional<Ressource> optionalRessource = ressourceRepository.findById(rId);
+    if (optionalRessource.isPresent()) {
+        return optionalRessource.get();
+    } else {
+        // Tu peux soit retourner null, soit lever une exception personnalisée
+        throw new RuntimeException("Ressource non trouvée avec l'ID : " + rId);
+    }
             }
 
     @Override
-    public Ressource addRessource(Ressource ressource, MultipartFile pdfFile) {
-        if (pdfFile != null && !pdfFile.isEmpty()) {
-            try {
-                // Créer le répertoire s'il n'existe pas
-                if (!Files.exists(rootLocation)) {
-                    Files.createDirectories(rootLocation);
-                }
-
-                // Générer un nom de fichier unique
-                String filename = UUID.randomUUID() + "-" + pdfFile.getOriginalFilename();
-                Files.copy(pdfFile.getInputStream(), this.rootLocation.resolve(filename));
-                ressource.setPdf(filename);
-            } catch (IOException e) {
-                throw new RuntimeException("Erreur lors de l'enregistrement du fichier", e);
+public Ressource addRessource(Ressource ressource, MultipartFile pdfFile) {
+    if (pdfFile != null && !pdfFile.isEmpty()) {
+        try {
+            // Créer le répertoire s'il n'existe pas
+            if (!Files.exists(rootLocation)) {
+                Files.createDirectories(rootLocation);
             }
+
+            // Générer un nom de fichier unique
+            String filename = UUID.randomUUID() + "-" + pdfFile.getOriginalFilename();
+            Files.copy(pdfFile.getInputStream(), this.rootLocation.resolve(filename));
+            ressource.setPdf(filename);
+        } catch (IOException e) {
+            System.err.println("Erreur lors de l'enregistrement du fichier : " + e.getMessage());
+            // Tu peux soit continuer sans fichier, soit mettre une valeur par défaut
+            ressource.setPdf(null);
         }
-        return ressourceRepository.save(ressource);
     }
+    return ressourceRepository.save(ressource);
+}
+
 
 
     @Override
@@ -90,18 +99,23 @@ private void handleNewPdfFile(Ressource ressource, MultipartFile pdfFile) {
         String filename = storeNewPdfFile(pdfFile);
         ressource.setPdf(filename);
     } catch (IOException e) {
-        throw new RuntimeException("Erreur lors de la mise à jour du fichier", e);
+        System.err.println("Erreur lors de la mise à jour du fichier PDF : " + e.getMessage());
+        // Optionnel : garder l'ancien fichier ou vider le champ
+        // ressource.setPdf(null);
     }
 }
+
 
 private void handlePdfDeletion(Ressource ressource) {
     try {
         deleteExistingPdfFile(ressource);
         ressource.setPdf(null);
     } catch (IOException e) {
-        throw new RuntimeException("Erreur lors de la suppression de l'ancien fichier", e);
+        System.err.println("Erreur lors de la suppression de l'ancien fichier : " + e.getMessage());
+        // Tu peux aussi ignorer, ou logger plus proprement si besoin
     }
 }
+
 
 private void deleteExistingPdfFile(Ressource ressource) throws IOException {
     if (ressource.getPdf() != null) {
