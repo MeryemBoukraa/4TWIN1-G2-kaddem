@@ -11,6 +11,8 @@ import tn.esprit.microservice.formation.entitiy.*;
 import tn.esprit.microservice.formation.service.FormationService;
 import tn.esprit.microservice.formation.service.IFormationService;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 @ToString
 @RestController
@@ -22,25 +24,32 @@ class FormationController {
 
     @PostMapping
     public ResponseEntity<Formation> addFormation(@RequestBody Formation formation) {
-        System.out.println("Received formation: " + formation); // Debugging line
         if (formation == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+        LocalDate today = LocalDate.now();
+        LocalDate localDateFormation = formation.getDateFormation().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        if (localDateFormation.isBefore(today)) {
+            formation.setStatut(Statut.TERMINEE);
+        }
+        else if (localDateFormation.isAfter(today)) {
+            formation.setStatut(Statut.PLANNIFIEE);
+        }
+        else
+            formation.setStatut(Statut.EN_COURS);
         formationService.addFormation(formation);
         return ResponseEntity.status(HttpStatus.CREATED).body(formation);
     }
-@GetMapping
+
+    @GetMapping
 public ResponseEntity<List<Formation>> getAllFormations() {
     List<Formation> formations = formationService.getAllFormation();
         System.out.println("Received formation: " + formations); // Debugging line
     return ResponseEntity.ok(formations);
 }
 
-    @GetMapping("/gett")
-    public String oussama()
-    {
-        return "oussama";
-    }
 
 
     @GetMapping("/{id}")
@@ -51,10 +60,23 @@ public ResponseEntity<List<Formation>> getAllFormations() {
     void deleteFormation(@PathVariable Long id) {
         formationService.deleteFormation(id);
     }
-    @PutMapping
-    Formation updateFormation(@RequestBody Formation formation) {
-        return formationService.updateFormation(formation);
+    @PatchMapping("/{id}")
+    public Formation updateFormation(@PathVariable Long id, @RequestBody Formation formation) {
+        LocalDate today = LocalDate.now();
+        LocalDate localDateFormation = formation.getDateFormation().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+        if (localDateFormation.isBefore(today)) {
+            formation.setStatut(Statut.TERMINEE);
+        }
+        else if (localDateFormation.isAfter(today)) {
+            formation.setStatut(Statut.PLANNIFIEE);
+        }
+        else
+            formation.setStatut(Statut.EN_COURS);
+        return formationService.updateFormation(id, formation);
     }
+
 
 
 }

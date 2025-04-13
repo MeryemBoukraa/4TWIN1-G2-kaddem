@@ -8,7 +8,7 @@ public interface IFormationService {
     public Formation addFormation(Formation formation);
     public Formation getFormation(Long id);
     public List<Formation> getAllFormation();
-    public Formation updateFormation(Formation formation);
+    public Formation updateFormation(Long id,Formation formation);
     public void deleteFormation(Long id);
 
 }

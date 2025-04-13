@@ -29,4 +29,8 @@ public class Formation {
 
     @Column(name = "nombre_place")
     private int nombrePlace;
+    @Enumerated(EnumType.STRING)
+    private Statut statut;
+
+    private float prix;
 }
