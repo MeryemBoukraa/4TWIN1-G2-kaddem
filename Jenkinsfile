@@ -18,13 +18,21 @@ pipeline {
                    sh 'mvn sonar:sonar  -Dsonar.token=squ_b0361c8f414b97c3eb1cdcd8737a26dc80b9c146 -Dmaven.test.skip=true'
                 }
          }
-    stage('MVN Nexus') {
+         stage('MVN Nexus') {
              steps {
                  sh 'mvn deploy -Dmaven.test.skip=true'
              }
          }
+        stage('Run Unit Tests') {
+                  steps {
+                      sh 'mvn test -Dtest=EquipeServiceImplTest'
+                  }
+              }
 
-
-
+              stage('Run All Tests') {
+                  steps {
+                      sh 'mvn test'
+                  }
+              }
     }
 }
