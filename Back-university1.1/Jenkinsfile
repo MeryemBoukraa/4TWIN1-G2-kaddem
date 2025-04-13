@@ -7,9 +7,6 @@ pipeline {
      }
 
      
- options {
-    scriptPath('Back-university1.1/Jenkinsfile')
-}
      stages {
 
 
