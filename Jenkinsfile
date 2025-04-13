@@ -42,12 +42,14 @@ pipeline {
         stage('Build & Unit Test') {
             steps {
                 sh 'mvn test -Dtest=EquipeServiceImplTest'
+                junit '**/target/surefire-reports/*.xml'
             }
         }
 
         stage('Run All Tests') {
             steps {
                 sh 'mvn test'
+                junit '**/target/surefire-reports/*.xml'
             }
         }
 
@@ -62,6 +64,7 @@ pipeline {
         stage('Package App') {
             steps {
                 sh 'mvn package -Dtest=EquipeServiceImplTest'
+                junit '**/target/surefire-reports/*.xml'
             }
         }
 
