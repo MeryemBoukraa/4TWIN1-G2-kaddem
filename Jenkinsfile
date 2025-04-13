@@ -93,6 +93,14 @@ pipeline {
       }
     }
 
+    stage('Build API Gateway') {
+    steps {
+        dir('Back-apigetway') {
+            sh 'mvn clean package -DskipTests'
+        }
+    }
+}
+
     stage('Build Docker Image') {
       steps {
         dir('Kassil') {  
