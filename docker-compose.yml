@@ -1,0 +1,66 @@
+
+
+version: '3.9'
+
+services:
+
+  db:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_DATABASE: formation
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      retries: 5
+      start_period: 30s
+    # volumes:
+      # - db_mysql:/var/lib/mysql   #persister les données de la bd entre tous les contenaires 
+      #- C:/xampp/mysql/data:/var/lib/mysql   #persister les données avec bd locale  et j'enleve volumes vers la fin 
+
+
+  eureka-server:
+    build: ./Eureka 
+    image: oussamaawledsalem/eurika:1.0
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+
+  formation:
+    build: .  # Path to your Spring Boot project
+    image: oussamaawledsalem/formation:1.0
+    container_name: formation
+    ports:
+      - "8089:8089"  # Expose the Spring Boot application on port 8089
+    depends_on:
+      db:
+        condition: service_healthy
+      eureka-server:
+        condition: service_started
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/formation?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false&max_allowed_packet=15728640
+      - spring.datasource.username=root
+      - spring.datasource.password=root
+
+  API-gateway:
+    build: ./gateway
+    image: oussamaawledsalem/apigetway:1.0
+    container_name: apigetway
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eureka-server
+      - formation
+    environment:
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - FORMATION_API_URL=http://formation:8089/formation 
+
+
+# volumes:
+#   db_mysql

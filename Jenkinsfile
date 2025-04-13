@@ -37,7 +37,10 @@ pipeline {
             '''
 
             // 🛠️ Build the new image
-            sh 'docker build -t oussamaawledsalem/formation:2.0.0 .'
+            sh 'docker-compose down --remove-orphans'
+
+                               // Build and run the containers
+            sh 'docker-compose up -d --build'
         }
     }
 }
