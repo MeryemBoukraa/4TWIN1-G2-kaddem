@@ -5,6 +5,7 @@ pipeline {
     MAVEN_HOME = tool 'M2_HOME'
     DOCKER_IMAGE = 'assilbelhaj/kassil'
     DOCKER_TAG = 'latest'
+    // Point this to your SNAPSHOTS or RELEASES repo as needed:
     NEXUS_REPO = 'http://192.168.33.10:8081/repository/maven-snapshots/'
   }
 
@@ -30,7 +31,12 @@ pipeline {
     stage('SonarQube Analysis') {
       steps {
         withSonarQubeEnv('SonarQube') {
-          sh 'mvn sonar:sonar -Dsonar.token=squ_b0361c8f414b97c3eb1cdcd8737a26dc80b9c146 -Dmaven.test.skip=true'
+          // The token can also be injected via Jenkins credentials
+          sh '''
+            mvn sonar:sonar \
+              -Dsonar.token=squ_b0361c8f414b97c3eb1cdcd8737a26dc80b9c146 \
+              -Dmaven.test.skip=true
+          '''
         }
       }
     }
@@ -68,10 +74,10 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: 'nexus-creds', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
           sh """
-            mvn deploy \
-              -DaltDeploymentRepository=nexus::default::${NEXUS_REPO} \
-              -Dnexus.user=$NEXUS_USER \
-              -Dnexus.password=$NEXUS_PASS
+            mvn deploy \\
+              -DaltDeploymentRepository=nexus::default::${NEXUS_REPO} \\
+              -Dnexus.user=\$NEXUS_USER \\
+              -Dnexus.password=\$NEXUS_PASS
           """
         }
       }
@@ -89,10 +95,24 @@ pipeline {
       steps {
         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
           sh """
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USER" --password-stdin
+            echo "\$DOCKERHUB_PASS" | docker login -u "\$DOCKERHUB_USER" --password-stdin
             docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
           """
         }
+      }
+    }
+    stage('Install Docker Compose') {
+      steps {
+        sh '''
+          if ! command -v docker-compose &> /dev/null
+          then
+            echo "Installing Docker Compose..."
+            sudo apt-get update -y
+            sudo apt-get install -y docker-compose
+          else
+            echo "Docker Compose already installed."
+          fi
+        '''
       }
     }
 
@@ -105,9 +125,9 @@ pipeline {
     stage('Notify Team') {
       steps {
         mail to: 'team@kassil.tn',
-             subject: "✅ Kassil Pipeline Success",
-             body: "The pipeline completed successfully.\n\nDetails: ${env.BUILD_URL}",
-             replyTo: 'no-reply@kassil.tn' // use a valid domain or one configured in your SMTP
+          subject: "✅ Kassil Pipeline Success",
+          body: "The pipeline completed successfully.\n\nDetails: ${env.BUILD_URL}",
+          replyTo: 'no-reply@kassil.tn'
       }
     }
   }
@@ -115,9 +135,9 @@ pipeline {
   post {
     failure {
       mail to: 'team@kassil.tn',
-           subject: "❌ Kassil Pipeline Failed",
-           body: "The pipeline failed.\n\nCheck the logs here: ${env.BUILD_URL}",
-           replyTo: 'no-reply@kassil.tn'
+        subject: "❌ Kassil Pipeline Failed",
+        body: "The pipeline failed.\n\nCheck the logs here: ${env.BUILD_URL}",
+        replyTo: 'no-reply@kassil.tn'
     }
   }
 }
