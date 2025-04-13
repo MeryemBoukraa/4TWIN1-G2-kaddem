@@ -21,20 +21,33 @@ pipeline {
 
         stage('Compile Stage') {
             steps {
-                sh 'mvn clean compile'
+               dir('contrat') { 
+                 sh 'mvn clean compile verify'
+                     } 
+                dir('eurika') {
+                    sh 'mvn clean compile'
+                }
+
+                dir('ApiGetWay - Copie/ApiGetWay') {
+                  sh 'mvn clean compile'
+                }
             }
         }
 
         stage('MVN Sonarqube') {
             steps {
+                dir('contrat') {
                 sh 'mvn sonar:sonar -Dsonar.token=sqa_630d16e1d2841ea09db84166a80d5bc0c1b8ec3e -Dmaven.test.skip=true'
             }
+                }
         }
 
         stage('MVN Nexus') {
             steps {
+ dir('contrat') {
                 sh 'mvn deploy -Dmaven.test.skip=true -DaltDeploymentRepository=nexus::default::http://192.168.188.133:8081//repository/maven-snapshots/'
             }
+}
         }
 
         stage('Modules Build') {
