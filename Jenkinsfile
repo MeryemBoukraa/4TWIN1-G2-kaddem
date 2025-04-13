@@ -17,13 +17,14 @@ pipeline {
              }
          }
  
-         stage('Compile Stage') {
-           
-             steps {
-               dir('Back-university1.1')
-                sh 'mvn clean compile'
-             }
-         }
+        stage('Compile Stage') {
+    steps {
+        dir('Back-university1.1') {
+            sh 'mvn clean compile'
+        }
+    }
+}
+
  
  
  
