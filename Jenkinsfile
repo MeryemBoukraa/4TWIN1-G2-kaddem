@@ -70,7 +70,7 @@ pipeline {
                 sh 'docker --version'  // Vérifie la version de Docker
             }
         }
-     
+
 stage('Deploy Image') {
     steps {
         withCredentials([usernamePassword(
@@ -80,7 +80,7 @@ stage('Deploy Image') {
         )]) {
             // Connexion Docker sans interaction avec --password-stdin
             sh '''
-                docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
                 docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0.0
             '''
         }
