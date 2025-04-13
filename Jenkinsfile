@@ -17,6 +17,12 @@ pipeline {
         stage('Compile Stage') {
             steps {
                 sh 'mvn clean compile'
+                dir('Eureka') {
+                sh 'mvn clean compile'
+                }
+                dir('ApiGetWay') {
+                sh 'mvn clean compile'
+                }
             }
         }
 
