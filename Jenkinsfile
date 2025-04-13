@@ -124,6 +124,31 @@ pipeline {
                     '''
                 }
             }
+              stage('Docker Compose Up') {
+            steps {
+                script {
+                    sh 'docker compose up -d'
+                }
+            }
+        }
+
+         stage("Run Prometheus"){
+      steps{
+ 
+        script{
+
+        sh('docker start prometheus')
+
+        }
+      }
+    }
+     stage("Run Grafana"){ 
+      steps{
+
+        script{
+        sh('docker start grafana')
+        }
+      }
         }
 
         // Décommente si tu veux activer docker compose
