@@ -29,11 +29,11 @@ public class RessourceServiceImpl implements IRessourceService {
     @Override
     public Ressource retrieveRessource(Long rId) {
         Optional<Ressource> optionalRessource = ressourceRepository.findById(rId);
+    
     if (optionalRessource.isPresent()) {
         return optionalRessource.get();
     } else {
-        // Tu peux soit retourner null, soit lever une exception personnalisée
-        throw new RuntimeException("Ressource non trouvée avec l'ID : " + rId);
+        return null; // ou gérer autrement si tu veux, par exemple un message ou log
     }
             }
 
