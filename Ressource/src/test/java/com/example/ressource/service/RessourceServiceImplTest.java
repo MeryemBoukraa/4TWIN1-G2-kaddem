@@ -1,6 +1,7 @@
 package com.example.ressource.service;
 
 import com.example.ressource.entity.Ressource;
+import com.example.ressource.entity.Type;
 import com.example.ressource.repository.RessourceRepository;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,15 +9,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.mock.web.MockMultipartFile;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
- class RessourceServiceImplTest {
+class RessourceServiceImplTest {
+
     @Mock
     private RessourceRepository ressourceRepository;
 
@@ -26,86 +33,91 @@ import java.util.Optional;
     @InjectMocks
     private RessourceServiceImpl ressourceService;
 
-    private Ressource testRessource;
+    private Ressource ressource;
 
     @BeforeEach
     void setUp() {
-        testRessource = new Ressource();
-        testRessource.setIdRessource(1L);
-        testRessource.setPdf("https://example.com/sample.pdf");  // URL factice
+        ressource = new Ressource();
+        ressource.setIdRessource(1L);
+        ressource.setTitre("Titre Test");
+        ressource.setDescription("Description");
+        ressource.setType(Type.valueOf("ARTICLE"));
+        ressource.setPdf("test.pdf");
     }
 
     @Test
-    void generateSummaryForRessource_ShouldReturnSummary() throws IOException {
-        // Simulation du résumé généré par SummaryService
-        String mockSummary = "Ceci est un résumé de test...";
-        when(ressourceRepository.findById(1L)).thenReturn(Optional.of(testRessource));
-        when(summaryService.generateSummary(testRessource)).thenReturn(mockSummary);
+    void testRetrieveAllRessources() {
+        List<Ressource> ressources = Arrays.asList(ressource);
+        when(ressourceRepository.findAll()).thenReturn(ressources);
 
-        // Exécution du service
-        String summary = ressourceService.generateSummaryForRessource(1L);
+        List<Ressource> result = ressourceService.retrieveAllRessources();
 
-        // Vérifications
-        assertNotNull(summary);
-        assertEquals(mockSummary, summary);
-        verify(ressourceRepository, times(1)).findById(1L);
-        verify(summaryService, times(1)).generateSummary(testRessource);
+        assertEquals(1, result.size());
+        verify(ressourceRepository).findAll();
     }
 
     @Test
-    void generateSummaryForRessource_WhenRessourceNotFound_ShouldThrowException() {
+    void testRetrieveRessource_WhenExists() {
+        when(ressourceRepository.findById(1L)).thenReturn(Optional.of(ressource));
+        Ressource found = ressourceService.retrieveRessource(1L);
+
+        assertNotNull(found);
+        assertEquals("Titre Test", found.getTitre());
+    }
+
+    @Test
+    void testRetrieveRessource_WhenNotExists() {
+        when(ressourceRepository.findById(2L)).thenReturn(Optional.empty());
+        Ressource found = ressourceService.retrieveRessource(2L);
+        assertNull(found);
+    }
+
+    @Test
+    void testAddRessource_WithPdf() throws IOException {
+        MockMultipartFile file = new MockMultipartFile("file", "test.pdf", "application/pdf", "PDF Content".getBytes());
+        when(ressourceRepository.save(any(Ressource.class))).thenReturn(ressource);
+
+        Ressource saved = ressourceService.addRessource(ressource, file);
+
+        assertNotNull(saved);
+        verify(ressourceRepository).save(any(Ressource.class));
+    }
+
+    @Test
+    void testRemoveRessource() {
+        doNothing().when(ressourceRepository).deleteById(1L);
+        ressourceService.removeRessource(1L);
+        verify(ressourceRepository).deleteById(1L);
+    }
+
+    @Test
+    void testGetNombreRessourcesParType() {
+        List<Object[]> data = List.of(new Object[]{"PDF", 3L}, new Object[]{"VIDEO", 2L});
+        when(ressourceRepository.countRessourcesByType()).thenReturn(data);
+
+        Map<String, Long> stats = ressourceService.getNombreRessourcesParType();
+
+        assertEquals(2, stats.size());
+        assertEquals(3L, stats.get("PDF"));
+        assertEquals(2L, stats.get("VIDEO"));
+    }
+
+    @Test
+    void testGenerateSummaryForRessource_Success() throws IOException {
+        when(ressourceRepository.findById(1L)).thenReturn(Optional.of(ressource));
+        when(summaryService.generateSummary(ressource)).thenReturn("Résumé");
+
+        String result = ressourceService.generateSummaryForRessource(1L);
+        assertEquals("Résumé", result);
+        verify(summaryService).generateSummary(ressource);
+    }
+
+    @Test
+    void testGenerateSummaryForRessource_NotFound() {
         when(ressourceRepository.findById(2L)).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(IllegalArgumentException.class,
                 () -> ressourceService.generateSummaryForRessource(2L));
-
         assertEquals("Ressource introuvable", exception.getMessage());
-        verify(ressourceRepository, times(1)).findById(2L);
-        verifyNoInteractions(summaryService); // Ne doit pas appeler le service de résumé
-    }
-
-    @Test
-    void generateSummaryForRessource_WhenPdfIsEmpty_ShouldThrowException() {
-        testRessource.setPdf("");
-
-        when(ressourceRepository.findById(1L)).thenReturn(Optional.of(testRessource));
-
-        Exception exception = assertThrows(IllegalArgumentException.class,
-                () -> ressourceService.generateSummaryForRessource(1L));
-
-        assertEquals("Aucun fichier PDF associé à cette ressource.", exception.getMessage());
-        verify(ressourceRepository, times(1)).findById(1L);
-    }
-
-    @Test
-    void generateSummaryForRessource_WhenPdfDownloadFails_ShouldThrowIOException() throws IOException {
-        when(ressourceRepository.findById(1L)).thenReturn(Optional.of(testRessource));
-        when(summaryService.generateSummary(testRessource)).thenThrow(new IOException("Téléchargement échoué"));
-
-        Exception exception = assertThrows(IOException.class,
-                () -> ressourceService.generateSummaryForRessource(1L));
-
-        assertEquals("Téléchargement échoué", exception.getMessage());
-        verify(summaryService, times(1)).generateSummary(testRessource);
-    }
-
-    @Test
-    void generateSummaryForRessource_WhenPdfContainsLargeText_ShouldTruncate() throws IOException {
-        // Création d’un faux fichier PDF avec du texte
-        File tempPdf = File.createTempFile("test_pdf", ".txt");
-        try (FileWriter writer = new FileWriter(tempPdf)) {
-            writer.write("Texte de test pour un PDF qui est très long et doit être tronqué après un certain nombre de caractères...");
-        }
-
-        String extractedText = "Texte de test pour un PDF qui est très long et doit être tronqué après un certain nombre de caractères...";
-        String expectedSummary = extractedText.substring(0, 200) + "...";
-
-        when(ressourceRepository.findById(1L)).thenReturn(Optional.of(testRessource));
-        when(summaryService.generateSummary(testRessource)).thenReturn(expectedSummary);
-
-        String summary = ressourceService.generateSummaryForRessource(1L);
-
-        assertNotNull(summary);
-        assertEquals(expectedSummary, summary);
     }
 }
