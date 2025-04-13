@@ -22,7 +22,7 @@ pipeline {
         stage('Compile Stage') {
             steps {
                dir('Ressource') { 
-                              sh 'mvn clean compile'
+                              sh 'mvn clean compile verify'
                      } 
                 dir('Eureka') {
                            sh 'mvn clean compile'
