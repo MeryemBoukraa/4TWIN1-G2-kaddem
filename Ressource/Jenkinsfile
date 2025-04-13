@@ -20,8 +20,9 @@ pipeline {
 
         stage('Compile Stage') {
             steps {
-               sh 'mvn clean compile'
-            }
+               dir('Ressource') { 
+                              sh 'mvn clean compile'
+                     }   }
         }
 
        
