@@ -33,6 +33,14 @@ pipeline {
                 }
             }
         }
+        stage('Cleanup Manual MySQL') {
+    steps {
+        script {
+            sh 'docker stop mysql8 || true'
+            sh 'docker rm mysql8 || true'
+        }
+    }
+}
 
         stage('SonarQube Analysis') {
             parallel {
