@@ -62,9 +62,16 @@ pipeline {
                  sh 'docker build -t meryemboukraa/meryemboukraa-g2-kaddem:1.0.0 .'
              }
          }
- 
+
+
+
+          stage('Check Docker Version') {
+            steps {
+                sh 'docker --version'  // Vérifie la version de Docker
+            }
+        }
      
-  stage('Deploy Image') {
+stage('Deploy Image') {
     steps {
         withCredentials([usernamePassword(
             credentialsId: 'docker-hub-credentials',
@@ -72,10 +79,10 @@ pipeline {
             passwordVariable: 'DOCKER_PASSWORD'
         )]) {
             // Connexion Docker sans interaction avec --password-stdin
-            sh """
-                echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+            sh '''
+                docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
                 docker push meryemboukraa/meryemboukraa-g2-kaddem:1.0.0
-            """
+            '''
         }
     }
 }
@@ -88,6 +95,7 @@ stage('Run Docker Compose') {
         sh 'docker compose up -d --build --force-recreate'
     }
 }
+
 
 
      }
