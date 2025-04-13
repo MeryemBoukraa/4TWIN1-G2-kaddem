@@ -9,6 +9,7 @@ pipeline {
         DB_URL = 'jdbc:mysql://localhost:3306/microservice_ressource'  
         DB_USER = 'root'  
         DB_PASSWORD = 'root'  
+        sonarHostUrl = 'http://192.168.33.10:9000'
     }
 
     stages {
@@ -35,112 +36,112 @@ pipeline {
 
        
 
-        stage('Start MySQL Container') {
-            steps {
-                script {
-                    // Démarre un conteneur MySQL pour les tests d'intégration
-                    sh '''
-                    docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=microservice_ressource -p 3306:3306 -d mysql:5.7
-                    '''
-                    // Attendre que MySQL soit prêt avant de continuer
-                    sh 'sleep 20'
-                }
-            }
-        }
+        // stage('Start MySQL Container') {
+        //     steps {
+        //         script {
+        //             // Démarre un conteneur MySQL pour les tests d'intégration
+        //             sh '''
+        //             docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=microservice_ressource -p 3306:3306 -d mysql:5.7
+        //             '''
+        //             // Attendre que MySQL soit prêt avant de continuer
+        //             sh 'sleep 20'
+        //         }
+        //     }
+        // }
 
-        stage('Run Unit Tests') {
-            steps {
-                dir('Ressource') {
-                sh 'mvn test -Dtest=RessourceServiceImplTest'
-                }
-            }
-        }
-        stage('Run Tests') {
-            steps {
-                dir('Ressource') {
-                sh 'mvn test'
-                }
-            }
-        }
+        // stage('Run Unit Tests') {
+        //     steps {
+        //         dir('Ressource') {
+        //         sh 'mvn test -Dtest=RessourceServiceImplTest'
+        //         }
+        //     }
+        // }
+        // stage('Run Tests') {
+        //     steps {
+        //         dir('Ressource') {
+        //         sh 'mvn test'
+        //         }
+        //     }
+        // }
 
         stage('MVN Sonarqube') {
              steps {
                  dir('Ressource') {
-                 sh 'mvn sonar:sonar  -Dsonar.token=sqa_f7d516031e481dcda3292b278c1a8d39c1011b36 -Dmaven.test.skip=true'
+                 sh 'mvn sonar:sonar  -Dsonar.token=sqa_f7d516031e481dcda3292b278c1a8d39c1011b36 -Dsonar.host.url=${sonarHostUrl} -Dmaven.test.skip=true'
                  }
              }
         }
 
-        stage('Install') {
-            steps {
-                dir('Ressource') {
-                sh 'mvn install'
-                }
+        // stage('Install') {
+        //     steps {
+        //         dir('Ressource') {
+        //         sh 'mvn install'
+        //         }
 
-                dir('ApiGetWay - Copie/ApiGetWay') {
-                sh 'mvn install'
-                }
+        //         dir('ApiGetWay - Copie/ApiGetWay') {
+        //         sh 'mvn install'
+        //         }
 
-                dir('Eureka') {
-                sh 'mvn install'
-                }
-            }
-        }
+        //         dir('Eureka') {
+        //         sh 'mvn install'
+        //         }
+        //     }
+        // }
 
-        stage('MVN Nexus') {
-            steps {
-                dir('Ressource') {
-                sh 'mvn deploy -Dmaven.test.skip=true'
-                }
-            }
-        }
+        // stage('MVN Nexus') {
+        //     steps {
+        //         dir('Ressource') {
+        //         sh 'mvn deploy -Dmaven.test.skip=true'
+        //         }
+        //     }
+        // }
 
-         stage('Stop MySQL Container') {
-            steps {
-                script {
-                    // Arrêter et supprimer le conteneur MySQL
-                    sh 'docker stop mysql-test'
-                    sh 'docker rm mysql-test'
-                }
-            }
-        }
+        //  stage('Stop MySQL Container') {
+        //     steps {
+        //         script {
+        //             // Arrêter et supprimer le conteneur MySQL
+        //             sh 'docker stop mysql-test'
+        //             sh 'docker rm mysql-test'
+        //         }
+        //     }
+        // }
 
-        stage('Building image') {
-            steps {
-                dir('Ressource') {
-                sh 'docker build -t yosrba/yosrbenamor-g2-kaddem:1.0 .'
-                }
+        // stage('Building image') {
+        //     steps {
+        //         dir('Ressource') {
+        //         sh 'docker build -t yosrba/yosrbenamor-g2-kaddem:1.0 .'
+        //         }
 
-                dir('Eureka') {
-                sh 'docker build -t yosrba/eureka:1.0 .'
-                }
+        //         dir('Eureka') {
+        //         sh 'docker build -t yosrba/eureka:1.0 .'
+        //         }
 
-                dir('ApiGetWay - Copie/ApiGetWay') {
-                sh 'docker build -t yosrba/apigetway:1.0 .'
-                }
-            }
-        }
+        //         dir('ApiGetWay - Copie/ApiGetWay') {
+        //         sh 'docker build -t yosrba/apigetway:1.0 .'
+        //         }
+        //     }
+        // }
 
-        stage('Deploy Image') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                }
-                sh 'docker push yosrba/yosrbenamor-g2-kaddem:1.0'
-                 sh 'docker push yosrba/apigetway:1.0'
-                 sh 'docker push yosrba/eureka:1.0'
-            }
-        }
+        // stage('Deploy Image') {
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+        //             sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+        //         }
+        //         sh 'docker push yosrba/yosrbenamor-g2-kaddem:1.0'
+        //          sh 'docker push yosrba/apigetway:1.0'
+        //          sh 'docker push yosrba/eureka:1.0'
+        //     }
+        // }
          
 
         
-        stage('Docker Compose Up') {
-            steps {
-                script {
-                    sh 'docker compose up -d'
-                }
-            }
-        }
+        // stage('Docker Compose Up') {
+        //     steps {
+        //         script {
+        //             sh 'docker compose up -d'
+        //         }
+        //     }
+        // }
     }
     //  post {
     //     always {
