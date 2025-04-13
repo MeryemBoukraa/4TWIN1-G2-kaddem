@@ -152,11 +152,12 @@ stage('Deploy with Docker Compose') {
 
     stage('Notify Team') {
       steps {
-        mail to: 'team@kassil.tn',
+        mail to: 'oumayma.sahmim@esprit.tn',
           subject: "✅ Kassil Pipeline Success",
           body: "The pipeline completed successfully.\n\nDetails: ${env.BUILD_URL}",
           replyTo: 'no-reply@kassil.tn'
       }
+      
     }
 
   }
