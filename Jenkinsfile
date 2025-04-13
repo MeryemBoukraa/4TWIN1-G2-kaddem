@@ -22,6 +22,16 @@ pipeline {
         dir('Back-university1.1') {
             sh 'mvn clean compile'
         }
+          dir('Back-university1.1') 
+            sh 'mvn clean compile verify'
+        }
+          dir('Back-eurika') {
+                sh 'mvn clean compile verify'
+                }
+
+                dir('backgetway') {
+               sh 'mvn clean compile verify'
+                }
     }
 }
 
