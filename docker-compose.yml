@@ -24,7 +24,7 @@ services:
 
   eureka-server:
     build: ./Eureka 
-    image: oussamaawledsalem/eurika:1.0.0
+    image: oussamaawledsalem/eurika:1.0
     container_name: eureka
     ports:
       - "8761:8761"
@@ -33,7 +33,7 @@ services:
 
   formation:
     build: .  # Path to your Spring Boot project
-    image: oussamaawledsalem/formation:1.0.0
+    image: oussamaawledsalem/formation:1.0
     container_name: formation
     ports:
       - "8089:8089"  # Expose the Spring Boot application on port 8089
@@ -50,7 +50,7 @@ services:
 
   API-gateway:
     build: ./gateway
-    image: oussamaawledsalem/apigetway:1.0.0
+    image: oussamaawledsalem/apigetway:1.0
     container_name: apigetway
     ports:
       - "8090:8090"
