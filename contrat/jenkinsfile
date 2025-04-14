@@ -59,7 +59,7 @@ pipeline {
                 -Dsonar.token=sqa_b403a612b91152fdf7493541e8799dc4ac848a9b \
                 -Dsonar.host.url=${sonarHostUrl} \
                 -Dsonar.sources=src/main/java/com/example/contrat/services \
-                -Dsonar.tests=src/test/java/com/example/contrat/services \
+                -Dsonar.tests=src/test/java/com/example/contrat/controllers \
                 -Dsonar.java.binaries=target/classes \
                 -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
             '''
