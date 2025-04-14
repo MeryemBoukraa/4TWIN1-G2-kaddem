@@ -11,7 +11,7 @@ services:
       MYSQL_DATABASE: formation
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - "3307:3307"
+      - "3300:3300"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s

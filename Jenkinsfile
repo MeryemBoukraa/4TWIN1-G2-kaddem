@@ -48,12 +48,20 @@ pipeline {
                 fi
             '''
             sh 'mvn verify test'
-            // 🛠️ Build the new image
-            sh 'docker-compose down --remove-orphans'
-            sh 'docker system prune -af'
-                               // Build and run the containers
-            sh 'docker-compose up -d --build'
-            sh 'docker images'
+           // Clean up named containers if they already exist
+           sh 'docker rm -f eureka formation apigetway || true'
+
+           // Clean up any orphaned/stuck containers
+           sh 'docker-compose down --remove-orphans'
+
+           // Optional: Clean dangling images, volumes, etc.
+           sh 'docker system prune -af'
+
+           // Build and start
+           sh 'docker-compose up -d --build'
+
+           // Show running containers
+           sh 'docker ps'
 
 
         }
