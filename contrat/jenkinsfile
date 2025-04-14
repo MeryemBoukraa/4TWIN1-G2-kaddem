@@ -20,19 +20,19 @@ pipeline {
             }
         }
 
-      //  stage('Compile Stage') {
-       //     steps {
-       //         dir('contrat') {
-            //        sh 'mvn clean compile verify'
-             //   }
-            //    dir('eurika') {
-              //      sh 'mvn clean compile'
-             //   }
-             //   dir('ApiGetWay') {
-              //      sh 'mvn clean compile'
-              //  }
-           // }
-    //   }
+        stage('Compile Stage') {
+            steps {
+                dir('contrat') {
+                    sh 'mvn clean compile verify'
+                }
+                dir('eurika') {
+                    sh 'mvn clean compile'
+                }
+                dir('ApiGetWay') {
+                    sh 'mvn clean compile'
+                }
+            }
+       }
 
         stage('Run Tests') {
             steps {
@@ -49,19 +49,19 @@ pipeline {
         }
 
 
-     //   stage('MVN Sonarqube') {
-         //   steps {
-           //     dir('contrat') {
-              //      sh '''
-              //          mvn sonar:sonar \
-              //          -Dsonar.token=sqa_b403a612b91152fdf7493541e8799dc4ac848a9b \
-               //         -Dsonar.host.url=${sonarHostUrl} \
-               //         -Dsonar.tests=src/test/java \
-                //        -Dmaven.test.skip=true
-                //    '''
-                //}
-           // }
-     //  }
+        stage('MVN Sonarqube') {
+            steps {
+                dir('contrat') {
+                    sh '''
+                        mvn sonar:sonar \
+                        -Dsonar.token=sqa_b403a612b91152fdf7493541e8799dc4ac848a9b \
+                        -Dsonar.host.url=${sonarHostUrl} \
+                        -Dsonar.tests=src/test/java \
+                        -Dmaven.test.skip=true
+                    '''
+                }
+            }
+       }
 
      stage('MVN Nexus') {
             steps {
@@ -73,50 +73,50 @@ pipeline {
 
         
 
-    //    stage('Modules Build') {
-     //       steps {
-           //     dir('contrat') {
-           //         sh 'mvn clean compile verify install'
-            //    }
-            //    dir('eurika') {
-             //       sh 'mvn clean compile install'
-             //   }
-            //    dir('ApiGetWay') {
-             //       sh 'mvn clean compile install'
-             //   }
-         //   }
-    //    }
+        stage('Modules Build') {
+            steps {
+               dir('contrat') {
+                    sh 'mvn clean compile verify install'
+                }
+                dir('eurika') {
+                    sh 'mvn clean compile install'
+                }
+                dir('ApiGetWay') {
+                    sh 'mvn clean compile install'
+                }
+            }
+        }
 
-   //     stage('Docker Build') {
-         //   steps {
-            //    dir('contrat') {
-            //        sh 'docker build -t ablouu/louayabidi-g2-kaddem:1.0 .'
-            //    }
-            //    dir('eurika') {
-             //       sh 'docker build -t ablouu/eurika:1.0 .'
-             //   }
-              //  dir('ApiGetWay') {
-              //      sh 'docker build -t ablouu/apigetway:1.0 .'
-            //    }
-         //   }
-     //   }
+        stage('Docker Build') {
+            steps {
+                dir('contrat') {
+                    sh 'docker build -t ablouu/louayabidi-g2-kaddem:1.0 .'
+                }
+                dir('eurika') {
+                    sh 'docker build -t ablouu/eurika:1.0 .'
+                }
+                dir('ApiGetWay') {
+                    sh 'docker build -t ablouu/apigetway:1.0 .'
+                }
+            }
+        }
 
-      //  stage('Docker Push') {
-        //    steps {
-          //      withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-           //         sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-            //    }
-            //    sh 'docker push ablouu/louayabidi-g2-kaddem:1.0'
-           //     sh 'docker push ablouu/apigetway:1.0'
-            //    sh 'docker push ablouu/eurika:1.0'
-           // }
-      //  }
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                }
+                sh 'docker push ablouu/louayabidi-g2-kaddem:1.0'
+                sh 'docker push ablouu/apigetway:1.0'
+                sh 'docker push ablouu/eurika:1.0'
+            }
+        }
 
-      //  stage('Docker Compose Up') {
-      //      steps {
-        //        sh 'docker compose up -d'
-        //    }
-      //  }
+       stage('Docker Compose Up') {
+            steps {
+                sh 'docker compose up -d'
+            }
+        }
     }
 
     post {
