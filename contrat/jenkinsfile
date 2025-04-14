@@ -49,21 +49,24 @@ pipeline {
         }
 
 
-       stage('MVN Sonarqube') {
-            steps {
-                dir('contrat') {
-                    sh '''
-                        mvn sonar:sonar \
-                        -Dsonar.token=sqa_b403a612b91152fdf7493541e8799dc4ac848a9b \
-                        -Dsonar.host.url=${sonarHostUrl} \
-                         -Dsonar.sources=src/main/java \
-                                           -Dsonar.tests=src/test/java \
-                                           -Dsonar.java.binaries=target/classes \
-                                           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-                    '''
-                }
-            }
-       }
+     stage('MVN Sonarqube') {
+    steps {
+        dir('contrat') {
+            sh '''
+                mvn clean test -Dtest=HistoriqueModificationServiceTest
+
+                mvn sonar:sonar \
+                -Dsonar.token=sqa_b403a612b91152fdf7493541e8799dc4ac848a9b \
+                -Dsonar.host.url=${sonarHostUrl} \
+                -Dsonar.sources=src/main/java/com/example/contrat/services \
+                -Dsonar.tests=src/test/java/com/example/contrat/services \
+                -Dsonar.java.binaries=target/classes \
+                -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+            '''
+        }
+    }
+}
+
 
      stage('MVN Nexus') {
             steps {
@@ -105,27 +108,31 @@ pipeline {
 stage('Docker Compose Build & Run') {
     steps {
         script {
-            //  Optionnel : supprimer image personnalisée
+            // Remove existing images (if necessary)
             sh '''
                 if docker images | grep -q "ablouu/contrat"; then
                     docker rmi ablouu/contrat:2.0.0 || true
                 fi
             '''
             
-            //  Lancer les tests avant le build
+            // Ensure Maven tests run before Docker build
             dir('contrat') {
                 sh 'mvn verify test'
             }
 
-            //  Nettoyage Docker
+            // Remove orphaned containers and prune unused images
             sh 'docker-compose down --remove-orphans'
             sh 'docker system prune -af'
 
-            // 🚀 Rebuild & Run
-            sh 'docker-compose up -d --build'
+            // Explicitly build images using docker-compose
+            sh 'docker-compose build'
+
+            // Run the containers in detached mode
+            sh 'docker-compose up -d'
         }
     }
 }
+
 
 
         stage('Docker Push') {
