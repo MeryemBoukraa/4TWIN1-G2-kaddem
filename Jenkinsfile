@@ -53,6 +53,8 @@ pipeline {
             sh 'docker system prune -af'
                                // Build and run the containers
             sh 'docker-compose up -d --build --no-cache'
+            sh 'docker images'
+
 
         }
     }
