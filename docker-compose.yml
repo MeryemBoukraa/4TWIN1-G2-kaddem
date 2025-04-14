@@ -23,7 +23,7 @@ services:
 
   api-gateway:
     build: ./ApiGetWay  
-    image: ablouu/apigetaway:1.0
+    image: ablouu/apigateway:1.0
     container_name: apigetaway
     ports:
       - "8090:8090"
