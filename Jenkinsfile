@@ -124,15 +124,9 @@ pipeline {
                     '''
                 }
             }
-              stage('Docker Compose Up') {
-            steps {
-                script {
-                    sh 'docker compose up -d'
-                }
-            }
         }
 
-               stage("Run Prometheus") {
+        stage("Run Prometheus") {
             steps {
                 script {
                     sh('docker start prometheus')
@@ -154,6 +148,6 @@ pipeline {
         //         sh 'docker compose up -d --build --force-recreate'
         //     }
         // }
-        }
+
     }
 }
