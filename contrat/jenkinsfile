@@ -23,7 +23,7 @@ pipeline {
         stage('Compile Stage') {
             steps {
                 dir('contrat') {
-                    sh 'mvn clean compile verify'
+                    sh 'mvn clean compile verify install'
                }
                 dir('eurika') {
                     sh 'mvn clean compile'
