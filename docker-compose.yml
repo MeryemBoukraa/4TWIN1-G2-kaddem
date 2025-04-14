@@ -3,7 +3,7 @@ version: '3.9'
 services:
   contrat:
     build: ./contrat
-    image: ablouu/contrat
+    image: ablouu/contrat:1.0
     container_name: contrat
     ports:
       - "8087:8087"
@@ -14,7 +14,7 @@ services:
 
   eureka-server:
     build: ./eurika
-    image: ablouu/eurika
+    image: ablouu/eurika:1.0
     container_name: eurika
     ports:
       - "8761:8761"
@@ -23,7 +23,7 @@ services:
 
   api-gateway:
     build: ./ApiGetWay  
-    image: ablouu/apigetaway
+    image: ablouu/apigetaway:1.0
     container_name: apigetaway
     ports:
       - "8090:8090"
