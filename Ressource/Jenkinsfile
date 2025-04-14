@@ -5,167 +5,156 @@ pipeline {
         jdk 'JAVA_HOME'
         maven 'M2_HOME'
     }
+
     environment {
         DB_URL = 'jdbc:mysql://localhost:3306/microservice_ressource'  
         DB_USER = 'root'  
         DB_PASSWORD = 'root'  
         sonarHostUrl = 'http://192.168.33.10:9000'
+        SONAR_TOKEN = 'sqa_f7d516031e481dcda3292b278c1a8d39c1011b36'
     }
 
     stages {
-        stage('GIT') {
+        stage('Checkout Code') {
             steps {
-               git branch: 'YosrBenAmor-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
+                git branch: 'YosrBenAmor-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
             }
         }
 
-         stage('Start MySQL Container') {
+        stage('Start MySQL Container') {
             steps {
                 script {
-                    // Démarre un conteneur MySQL pour les tests d'intégration
                     sh '''
-                    docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=microservice_ressource -p 3306:3306 -d mysql:5.7
+                        docker run --name mysql-test -e MYSQL_ROOT_PASSWORD=root \
+                        -e MYSQL_DATABASE=microservice_ressource -p 3306:3306 -d mysql:5.7
+                        sleep 20
                     '''
-                    // Attendre que MySQL soit prêt avant de continuer
-                    sh 'sleep 20'
                 }
             }
         }
 
-        stage('Compile Stage') {
-            steps {
-               dir('Ressource') { 
-                              sh 'mvn clean compile verify'
-                     } 
-                dir('Eureka') {
-                           sh 'mvn clean compile'
-                }
-
-                dir('ApiGetWay - Copie/ApiGetWay') {
-                           sh 'mvn clean compile'
-                }
-            }
-        }
-
-       
-
-       
-
-        stage('Run Unit Tests') {
-            steps {
-                dir('Ressource') {
-                sh 'mvn test -Dtest=RessourceServiceImplTest'
-                }
-            }
-        }
-        stage('Run Tests') {
-            steps {
-                dir('Ressource') {
-                sh 'mvn test'
-                }
-            }
-        }
-
-        stage('MVN Sonarqube') {
-             steps {
-                 dir('Ressource') {
-                 sh 'mvn sonar:sonar  -Dsonar.token=sqa_f7d516031e481dcda3292b278c1a8d39c1011b36 -Dsonar.host.url=${sonarHostUrl} -Dsonar.tests=src/test/java '
-                 }
-             }
-        }
-
-        stage('Install') {
-            steps {
-                dir('Ressource') {
-                sh 'mvn install'
-                }
-
-                dir('ApiGetWay - Copie/ApiGetWay') {
-                sh 'mvn install'
-                }
-
-                dir('Eureka') {
-                sh 'mvn install'
-                }
-            }
-        }
-
-        stage('MVN Nexus') {
-            steps {
-                dir('Ressource') {
-                sh 'mvn deploy -Dmaven.test.skip=true'
-                }
-            }
-        }
-
-         stage('Stop MySQL Container') {
+        stage('Compile Projects') {
             steps {
                 script {
-                    // Arrêter et supprimer le conteneur MySQL
-                    sh 'docker stop mysql-test'
-                    sh 'docker rm mysql-test'
+                    def modules = ['Ressource', 'Eureka', 'ApiGetWay - Copie/ApiGetWay']
+                    modules.each { module ->
+                        dir(module) {
+                            sh 'mvn clean compile'
+                        }
+                    }
                 }
             }
         }
 
-        stage('Building image') {
+
+        stage('Run All Tests') {
             steps {
                 dir('Ressource') {
-                sh 'docker build -t yosrba/yosrbenamor-g2-kaddem:1.0 .'
-                }
-
-                dir('Eureka') {
-                sh 'docker build -t yosrba/eureka:1.0 .'
-                }
-
-                dir('ApiGetWay - Copie/ApiGetWay') {
-                sh 'docker build -t yosrba/apigetway:1.0 .'
+                    sh 'mvn test'
                 }
             }
         }
 
-        stage('Deploy Image') {
+        stage('SonarQube Analysis') {
+            steps {
+                dir('Ressource') {
+                    sh """
+                        mvn sonar:sonar \
+                        -Dsonar.token=${SONAR_TOKEN} \
+                        -Dsonar.host.url=${sonarHostUrl} \
+                        -Dsonar.tests=src/test/java
+                    """
+                }
+            }
+        }
+
+        stage('Install Artifacts') {
+            steps {
+                script {
+                    def modules = ['Ressource', 'ApiGetWay - Copie/ApiGetWay', 'Eureka']
+                    modules.each { module ->
+                        dir(module) {
+                            sh 'mvn install'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Nexus') {
+            steps {
+                dir('Ressource') {
+                    sh 'mvn deploy -Dmaven.test.skip=true'
+                }
+            }
+        }
+
+        stage('Stop MySQL Container') {
+            steps {
+                sh '''
+                    docker stop mysql-test
+                    docker rm mysql-test
+                '''
+            }
+        }
+
+        stage('Build Docker Images') {
+            steps {
+                script {
+                    def images = [
+                        'Ressource=yosrba/yosrbenamor-g2-kaddem:1.0',
+                        'Eureka=yosrba/eureka:1.0',
+                        'ApiGetWay - Copie/ApiGetWay=yosrba/apigetway:1.0'
+                    ]
+                    images.each { entry ->
+                        def (dirName, imageName) = entry.tokenize('=')
+                        dir(dirName) {
+                            sh "docker build -t ${imageName} ."
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Images') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
-              
-                sh 'docker push yosrba/yosrbenamor-g2-kaddem:1.0'
-                 sh 'docker push yosrba/apigetway:1.0'
-                 sh 'docker push yosrba/eureka:1.0'
-            }
-        }
-         
 
-        
-        stage('Docker Compose Up') {
-            steps {
                 script {
-                    sh 'docker compose up -d'
+                    def images = [
+                        'yosrba/yosrbenamor-g2-kaddem:1.0',
+                        'yosrba/apigetway:1.0',
+                        'yosrba/eureka:1.0'
+                    ]
+                    images.each { img ->
+                        sh "docker push ${img}"
+                    }
                 }
             }
         }
 
-         stage("Run Prometheus"){
-      steps{
- 
-        script{
-
-        sh('docker start prometheus')
-
+        stage('Start with Docker Compose') {
+            steps {
+                sh 'docker compose up -d'
+            }
         }
-      }
-    }
-     stage("Run Grafana"){ 
-      steps{
 
-        script{
-        sh('docker start grafana')
+        stage('Start Prometheus') {
+            steps {
+                sh 'docker start prometheus'
+            }
         }
-      }
+
+        stage('Start Grafana') {
+            steps {
+                sh 'docker start grafana'
+            }
+        }
     }
-    }
-    //  post {
+
+    // post {
     //     always {
     //         sh 'docker-compose down'
     //     }
