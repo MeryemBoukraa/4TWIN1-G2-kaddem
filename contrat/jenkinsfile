@@ -133,18 +133,19 @@ stage('Docker Compose Build & Run') {
     }
 }
 
-
-
-        stage('Docker Push') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                }
-                sh 'docker push ablouu/louayabidi-g2-kaddem:1.0'
-                sh 'docker push ablouu/apigetway:1.0'
-                sh 'docker push ablouu/eurika:1.0'
-            }
+stage('Docker Push') {
+    steps {
+        withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+            sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+            
+            // Push images
+            sh 'docker push ablouu/louayabidi-g2-kaddem:1.0'
+            sh 'docker push ablouu/apigetway:1.0'
+            sh 'docker push ablouu/eurika:1.0'
         }
+    }
+}
+
 
        stage('Docker Compose Up') {
             steps {
