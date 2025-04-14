@@ -89,19 +89,44 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                dir('contrat') {
-                    sh 'docker build -t ablouu/louayabidi-g2-kaddem:1.0 .'
-                }
-                dir('eurika') {
-                    sh 'docker build -t ablouu/eurika:1.0 .'
-                }
-                dir('ApiGetWay') {
-                    sh 'docker build -t ablouu/apigetway:1.0 .'
-                }
+      //  stage('Docker Build') {
+        //    steps {
+          //      dir('contrat') {
+            //        sh 'docker build -t ablouu/louayabidi-g2-kaddem:1.0 .'
+              //  }
+                //dir('eurika') {
+                  //  sh 'docker build -t ablouu/eurika:1.0 .'
+                //}
+     //           dir('ApiGetWay') {
+        //            sh 'docker build -t ablouu/apigetway:1.0 .'
+          //      }
+            //}
+     //   }
+stage('Docker Compose Build & Run') {
+    steps {
+        script {
+            //  Optionnel : supprimer image personnalisée
+            sh '''
+                if docker images | grep -q "ablouu/contrat"; then
+                    docker rmi ablouu/contrat:2.0.0 || true
+                fi
+            '''
+            
+            //  Lancer les tests avant le build
+            dir('contrat') {
+                sh 'mvn verify test'
             }
+
+            //  Nettoyage Docker
+            sh 'docker-compose down --remove-orphans'
+            sh 'docker system prune -af'
+
+            // 🚀 Rebuild & Run
+            sh 'docker-compose up -d --build'
         }
+    }
+}
+
 
         stage('Docker Push') {
             steps {
