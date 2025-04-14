@@ -18,7 +18,7 @@ pipeline {
 
         stage('Checkout GitHub') {
             steps {
-                git branch: 'aaAssilBelhaj-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
+                git branch: 'AssilBelhaj-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
             }
         }
 
@@ -154,20 +154,27 @@ pipeline {
     post {
 
         success {
-            mail to: 'assil.belhaj@esprit.tn',
-                 subject: "✅ Succès du Build : ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: """
-                 Bonjour équipe,
+            script {
+                def consoleOutput = sh(script: "curl -s -u 'admin:1175162868c860ae273109fb136dd519c5' http://192.168.33.10:8080/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/consoleText", returnStdout: true).trim()
 
-                 Le build du projet '${env.JOB_NAME}' s'est terminé avec succès.
+                mail to: 'oumayma.sahmim@esprit.tn',
+                     subject: "Succès du Build : ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                     body: """
+                     Bonjour équipe,
 
-                 Détails :
-                 - Numéro du Build : ${env.BUILD_NUMBER}
-                 - Statut du Build : SUCCESS
-                 - Durée du Build : ${currentBuild.durationString}
+                     Le build du projet '${env.JOB_NAME}' s'est terminé avec succès.
 
-                 Consultez les détails ici : ${env.BUILD_URL}
-                 """
+                     Détails :
+                     - Numéro du Build : ${env.BUILD_NUMBER}
+                     - Statut du Build : SUCCESS
+                     - Durée du Build : ${currentBuild.durationString}
+
+                     Sortie de la console :
+                     ${consoleOutput}
+
+                     Consultez les détails ici : ${env.BUILD_URL}
+                     """
+            }
         }
 
         failure {
