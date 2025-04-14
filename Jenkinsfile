@@ -105,9 +105,7 @@ stage('SonarQube Analysis') {
         stage('MVN Nexus') {
             steps {
                 sh 'mvn deploy '
-                 dir('gateway') {
-                    sh 'mvn deploy'
-                 }
+
                  dir('Eureka') {
                     sh 'mvn deploy'
                  }
