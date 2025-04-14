@@ -1,44 +1,58 @@
-package com.example.contrat.controllers;
+package com.example.contrat.services;
 
 import com.example.contrat.entities.Contrat;
 import com.example.contrat.entities.HistoriqueModification;
 import com.example.contrat.repositories.HistoriqueModificationRepository;
-import com.example.contrat.services.HistoriqueModificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 
-import java.util.Date;
+import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class HistoriqueModificationServiceTest {
 
     @InjectMocks
-    private HistoriqueModificationService historiqueModificationService;
+    private HistoriqueModificationService historiqueService;
 
     @Mock
-    private HistoriqueModificationRepository historiqueModificationRepository;
+    private HistoriqueModificationRepository historiqueRepo;
 
-    @Mock
     private Contrat contrat;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);  // Initialisation des mocks
+        MockitoAnnotations.openMocks(this);
+        contrat = new Contrat();
+        contrat.setIdContrat(1);
     }
 
     @Test
     void testAjouterHistorique() {
-        // Simuler le comportement du contrat
-        when(contrat.getIdContrat()).thenReturn(1);
+        doAnswer(invocation -> {
+            HistoriqueModification historique = invocation.getArgument(0);
+            assertEquals("Ajout", historique.getAction());
+            assertEquals("Détail test", historique.getDetails());
+            assertEquals(contrat, historique.getContrat());
+            assertNotNull(historique.getDateModification());
+            return null;
+        }).when(historiqueRepo).save(any(HistoriqueModification.class));
 
-        // Appeler la méthode que vous voulez tester
-        historiqueModificationService.ajouterHistorique(contrat, "Modification de statut", "Ajout d'un document");
+        historiqueService.ajouterHistorique(contrat, "Ajout", "Détail test");
 
-        // Vérifier que la méthode save() a bien été appelée
-        verify(historiqueModificationRepository, times(1)).save(any(HistoriqueModification.class));
+        verify(historiqueRepo, times(1)).save(any(HistoriqueModification.class));
+    }
+
+    @Test
+    void testGetHistoriqueByContrat() {
+        List<HistoriqueModification> historiqueList = Arrays.asList(new HistoriqueModification(), new HistoriqueModification());
+        when(historiqueRepo.findByContratId(1)).thenReturn(historiqueList);
+
+        List<HistoriqueModification> result = historiqueService.getHistoriqueByContrat(1);
+
+        assertEquals(2, result.size());
+        verify(historiqueRepo).findByContratId(1);
     }
 }
