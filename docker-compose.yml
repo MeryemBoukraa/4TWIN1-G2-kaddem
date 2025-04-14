@@ -13,8 +13,7 @@ services:
 
   universite:
     build: ./Back-university1.1
-    image: /meryemboukraa-g2-kaddem:1.0 
-
+    image: meryemboukraa/meryemboukraa-g2-kaddem:1.0
     container_name: universite
     ports:
       - "8082:8082"
