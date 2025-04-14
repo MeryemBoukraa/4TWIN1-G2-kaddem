@@ -157,8 +157,8 @@ pipeline {
             script {
                 def consoleOutput = sh(script: "curl -s -u 'admin:1175162868c860ae273109fb136dd519c5' http://192.168.33.10:8080/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/consoleText", returnStdout: true).trim()
 
-                mail to: 'oumayma.sahmim@esprit.tn',
-                     subject: "Succès du Build : ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                mail to: 'assil.belhaj@esprit.tn',
+                     subject: "✅ Succès du Build Kassil : ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                      body: """
                      Bonjour équipe,
 
@@ -182,7 +182,7 @@ pipeline {
                 def consoleOutput = sh(script: "curl -s -u 'admin:1175162868c860ae273109fb136dd519c5' http://192.168.33.10:8080/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/consoleText", returnStdout: true).trim()
 
                 mail to: 'assil.belhaj@esprit.tn',
-                     subject: "❌ Échec du Build : ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                     subject: "❌ Échec du Build kassil : ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                      body: """
                      Bonjour équipe,
 
