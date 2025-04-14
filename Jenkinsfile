@@ -28,7 +28,7 @@ pipeline {
 
         stage('Maven Clean Install') {
             steps {
-                sh 'mvn clean install '
+                sh 'mvn clean verify install '
                  dir('Eureka') {
                                 sh 'mvn install -DskipTests'
                                 }
@@ -74,20 +74,19 @@ pipeline {
 
 stage('SonarQube Analysis') {
     steps {
-               withSonarQubeEnv('scanner') {
+        withSonarQubeEnv('scanner') {
             withCredentials([string(credentialsId: 'scanner', variable: 'TOKEN')]) {
                 sh '''
-                mvn sonar:sonar \
-                -Dsonar.token=$TOKEN \
-                -Dsonar.projectKey=formation \
-                -Dsonar.sources=src/main/java \
-                -Dsonar.tests=src/test/java \
-                -Dsonar.java.binaries=target/classes
-                 -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+                    mvn sonar:sonar \
+                    -Dsonar.token=$TOKEN \
+                    -Dsonar.projectKey=formation \
+                    -Dsonar.sources=src/main/java \
+                    -Dsonar.tests=src/test/java \
+                    -Dsonar.java.binaries=target/classes \
+                    -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
                 '''
             }
         }
-
     }
 }
 
