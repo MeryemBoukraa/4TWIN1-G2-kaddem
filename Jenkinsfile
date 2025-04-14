@@ -89,21 +89,7 @@ pipeline {
 
 
 
-         stage("Run Prometheus") {
-            steps {
-                script {
-                    sh('docker start prometheus')
-                }
-            }
-        }
-
-        stage("Run Grafana") { 
-            steps {
-                script {
-                    sh('docker start grafana')
-                }
-            }
-        }
+       
 
         stage('Building image') {
             steps {
@@ -140,6 +126,22 @@ pipeline {
                         docker push meryemboukraa/apigetway:1.0
                         docker push meryemboukraa/eureka:1.0
                     '''
+                }
+            }
+        }
+
+          stage("Run Prometheus") {
+            steps {
+                script {
+                    sh('docker start prometheus')
+                }
+            }
+        }
+
+        stage("Run Grafana") { 
+            steps {
+                script {
+                    sh('docker start grafana')
                 }
             }
         }
