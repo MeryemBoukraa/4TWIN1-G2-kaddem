@@ -87,6 +87,24 @@ pipeline {
             }
         }
 
+
+
+         stage("Run Prometheus") {
+            steps {
+                script {
+                    sh('docker start prometheus')
+                }
+            }
+        }
+
+        stage("Run Grafana") { 
+            steps {
+                script {
+                    sh('docker start grafana')
+                }
+            }
+        }
+
         stage('Building image') {
             steps {
                 dir('Back-university1.1') {
@@ -126,21 +144,7 @@ pipeline {
             }
         }
 
-        stage("Run Prometheus") {
-            steps {
-                script {
-                    sh('docker start prometheus')
-                }
-            }
-        }
-
-        stage("Run Grafana") { 
-            steps {
-                script {
-                    sh('docker start grafana')
-                }
-            }
-        }
+      
 
         // Décommente si tu veux activer docker compose
         // stage('Run Docker Compose') {
