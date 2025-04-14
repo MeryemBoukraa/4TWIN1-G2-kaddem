@@ -47,6 +47,14 @@ pipeline {
         }
 
 
+        stage('Run Unit Test') {
+            steps {
+                dir('Ressource') {
+                    sh 'mvn test -Dtest=RessourceServiceImplTest'
+                }
+            }
+        }
+        
         stage('Run All Tests') {
             steps {
                 dir('Ressource') {
