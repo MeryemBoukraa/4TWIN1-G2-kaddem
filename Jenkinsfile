@@ -132,23 +132,20 @@ pipeline {
             }
         }
 
-         stage("Run Prometheus"){
-      steps{
- 
-        script{
-
-        sh('docker start prometheus')
-
+               stage("Run Prometheus") {
+            steps {
+                script {
+                    sh('docker start prometheus')
+                }
+            }
         }
-      }
-    }
-     stage("Run Grafana"){ 
-      steps{
 
-        script{
-        sh('docker start grafana')
-        }
-      }
+        stage("Run Grafana") { 
+            steps {
+                script {
+                    sh('docker start grafana')
+                }
+            }
         }
 
         // Décommente si tu veux activer docker compose
@@ -157,6 +154,3 @@ pipeline {
         //         sh 'docker compose up -d --build --force-recreate'
         //     }
         // }
-
-    }
-}
