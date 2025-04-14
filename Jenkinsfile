@@ -28,7 +28,7 @@ pipeline {
 
         stage('Maven Clean Install') {
             steps {
-                sh 'mvn clean verify install '
+                sh 'mvn clean install -DskipTests=true'
                  dir('Eureka') {
                                 sh 'mvn install -DskipTests'
                                 }
@@ -47,7 +47,7 @@ pipeline {
                     docker rmi oussamaawledsalem/formation:2.0.0 || true
                 fi
             '''
-
+            sh 'mvn verify test'
             // 🛠️ Build the new image
             sh 'docker-compose down --remove-orphans'
             sh 'docker system prune -af'
@@ -95,6 +95,12 @@ stage('SonarQube Analysis') {
         stage('MVN Nexus') {
             steps {
                 sh 'mvn deploy '
+                 dir('gateway') {
+                    sh 'mvn deploy'
+                 }
+                 dir('Eureka') {
+                    sh 'mvn deploy'
+                 }
             }
         }
     }
