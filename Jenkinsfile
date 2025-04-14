@@ -18,8 +18,8 @@ pipeline {
 
         stage('Checkout GitHub') {
             steps {
-                git branch: 'AssilBelhaj-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
-            
+                git branch: 'aaAssilBelhaj-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
+            }
         }
 
         stage('Maven Clean Compile') {
