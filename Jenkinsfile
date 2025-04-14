@@ -19,7 +19,7 @@ pipeline {
         stage('Checkout GitHub') {
             steps {
                 git branch: 'AssilBelhaj-4Twin1-G2', url: 'https://github.com/MeryemBoukraa/4TWIN1-G2-kaddem.git'
-            }
+            
         }
 
         stage('Maven Clean Compile') {
@@ -154,7 +154,7 @@ pipeline {
     post {
 
         success {
-            mail to: 'oumayma.sahmim@esprit.tn',
+            mail to: 'assil.belhaj@esprit.tn',
                  subject: "✅ Succès du Build : ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: """
                  Bonjour équipe,
@@ -174,7 +174,7 @@ pipeline {
             script {
                 def consoleOutput = sh(script: "curl -s -u 'admin:1175162868c860ae273109fb136dd519c5' http://192.168.33.10:8080/job/${env.JOB_NAME}/${env.BUILD_NUMBER}/consoleText", returnStdout: true).trim()
 
-                mail to: 'oumayma.sahmim@esprit.tn',
+                mail to: 'assil.belhaj@esprit.tn',
                      subject: "❌ Échec du Build : ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                      body: """
                      Bonjour équipe,
