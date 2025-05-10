@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+
+  eureka-server:
+    build: ./Back-eurika
+    image: meryemboukraa/eurika:1.0
+    container_name: eureka
+    ports:
+      - "8761:8761"
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka/
+
+  universite:
+    build: ./Back-university1.1
+    image: meryemboukraa/meryemboukraa-g2-kaddem:1.0
+    container_name: universite
+    ports:
+      - "8082:8082"
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka/
+
+  API-gateway:
+    build: ./backgetway
+    image: meryemboukraa/apigetway:1.0
+    container_name: apigetway
+    ports:
+      - "8090:8090"
+    depends_on:
+      - eureka-server
+      - universite
+    environment:
+      - eureka.client.service-url.defaultZone=http://eureka-server:8761/eureka/
